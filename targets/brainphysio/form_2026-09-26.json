@@ -1,0 +1,386 @@
+[
+ {
+  "q": "Timestamp",
+  "a": "9/26/2026 16:57:14"
+ },
+ {
+  "q": "Who is answering?",
+  "a": "Thomas (the first intern who set up Brainphysio using Celia's models)"
+ },
+ {
+  "q": "Your definition of AI slop, in one or two sentences, in your own words",
+  "a": "AI slop is irresponsible use of AI. It is most irresponsible at the design stage where key decisions can be AI-driven, but there should also be examination and validation, even with no record of such validation. I think your following \"design decision or implementation detail\" is more about the change and not the use of AI. That's exactly what I see here."
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Modelling · adding or removing an element; changing the circuit topology]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Modelling · choosing a constitutive law (e.g. Marmarou vs linear compliance)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Modelling · a parameter default, a unit, a derived-parameter formula]",
+  "a": "Case by case"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Modelling · initial conditions, seeds, the static-to-dynamic hand-off]",
+  "a": "Case by case"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Modelling · solver choice, tolerances, dtmax, clamps]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Modelling · stimulus shape and timing (ramps, onsets)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Fitting · which parameters are free, and their bounds]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Fitting · the objective (what is scored, weights, penalties)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Fitting · data preprocessing (sampling rate, filters, artefact rules, alignment)]",
+  "a": "Implementation detail"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Fitting · which recordings are used, dropped or held out]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Fitting · acceptance gates and thresholds (convergence, chatter, verify)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Plotting · what goes on each axis (V vs own Ptm, vs Pds, vs time)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Plotting · colour, line style and naming of models and runs]",
+  "a": "Case by case"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Plotting · windows, limits, zero alignment, strides, smoothing]",
+  "a": "Case by case"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Plotting · what a caption or panel title claims]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Comparison · what is compared with what (M1 vs M4, model vs recording, vs literature)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Comparison · the agreement metric (RMSE, ARI, ratios, breakpoint fits)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Comparison · which run or stamp counts as 'the' result (pins, latest)]",
+  "a": "Design decision"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Infrastructure · file layout, drivers, env vars, the simulation store]",
+  "a": "Implementation detail"
+ },
+ {
+  "q": "For each kind of change: design decision, or implementation detail? [Prose · comments, script headers, READMEs, notebook narration]",
+  "a": "Design decision"
+ },
+ {
+  "q": "AI-written prose often states findings ('M1 over-responds', 'that notebook is STALE', 'r = 0.18'). Is a claim in prose a design decision?",
+  "a": "Only once the claim is reused (in a report, a figure, or another script)"
+ },
+ {
+  "q": "A change is CRITICAL when it… (tick every condition that is enough on its own)",
+  "a": "changes a model equation, the topology or a constitutive law, changes a parameter value, a bound or an initial condition, changes data preprocessing (sampling rate, filters, alignment, exclusions), changes what is compared with what, or the comparison metric, can make two code paths silently disagree (fit vs deck, a model vs its copy), states a finding in prose that others will cite, \"can make two code paths disagree\" is not clear to me. if you mean changing the codepaths of the repo structure, yes this is major."
+ },
+ {
+  "q": "A change counts as EXAMINED when… (tick every condition that is enough on its own)",
+  "a": "I reproduced its key number another way (hand calculation, a second code path, the paper), I wrote the rationale in my own words (commit message or decision log), A second person reviewed it, I checked it against the source it cites, this does not include all ways to examine. the decision log is good. I would say that creating a workthrough (exercise, tut, or just automatic walkthrough but I must say I followed it) for the next person is also a valid examination. Beyond that, creating no walkthrough and assuming a body of knowledge (eg. currently the case with the filters) assumes that I am either sufficiently knowledgeable to validate on observation, or uninterested in validating due to other constraints. either way, the lack of validation needs to be recognized somehow by the person staging the work."
+ },
+ {
+  "q": "Once examined, is it still slop?",
+  "a": "No: examined and justified means it is my decision now"
+ },
+ {
+  "q": "What should happen to EXAMINED CRITICAL slop?",
+  "a": "Keep it, with a decision-log entry (the rationale and the check that was done)"
+ },
+ {
+  "q": "Calibration: where does each scenario fall? [You specify a panel exactly (axes, window, colours); the AI writes the code]",
+  "a": "Unexamined · passable"
+ },
+ {
+  "q": "Calibration: where does each scenario fall? [The AI picks the window and colours; you accept because the PNG looks fine]",
+  "a": "Examined · passable"
+ },
+ {
+  "q": "Calibration: where does each scenario fall? [A solve crashes; the AI loosens a tolerance; the run completes; you commit]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Calibration: where does each scenario fall? [The AI proposes three fixes with trade-offs; you pick one and write why]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Calibration: where does each scenario fall? [The AI transcribes an equation from a paper; you check it against the PDF]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Calibration: where does each scenario fall? [The AI builds a compact replica of a model and draws a structural conclusion from it]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Modelling [Every pressure ramp is a quintic smootherstep 6s⁵−15s⁴+10s³ ('a smooth function that Claude implemented', Model_1/Model.jl:836)]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Modelling [Model_3 (ex-M4): periodic steady-state tolerance set to 1.3e-5, because 1e-6 never converged]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Modelling [Pulsatile runs start from a converged limit cycle, not from the flat-Pa fixed point (M5, then M1)]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Modelling [Autoregulation exponent clamped to ±40 in the compact M7 replica (RK4 overflow)]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Modelling [Compact M6 replica: measured ABP as its boundary, plus a 20 ms jugular-area relaxation that M5 does not have]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Modelling [Re-deriving a fitted M1 must use Rss's component default (212.8), not the cascade value]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Fitting [Stage A is scored on the 1 Hz respiration-free mean; the pulse only enters in stage B]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Fitting [The free parameters and their search box (7 of 24 stage-A estimates sit on a bound)]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Fitting [Fitted E_v lands 3–7× above Marmarou's value in all four patients, accepted as is]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Fitting [Sampling rate FS = 100 Hz in prep_jugular_data.py (probably 200 Hz)]",
+  "a": "Mine — not slop"
+ },
+ {
+  "q": "Fitting [Artefact rule: range clip + sustained-excursion test; gaps under 2 s interpolated]",
+  "a": "Examined · passable"
+ },
+ {
+  "q": "Fitting [Stage B: Ca_v by expand-then-bisect; valve chatter gate CHATTER_MAX = 1.5 (0.05 killed 137's fit)]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Fitting [One onset for every patient: model time = data time + 120 s]",
+  "a": "Unexamined · passable"
+ },
+ {
+  "q": "Fitting [Patient 150 (D) left out; no holdout for M1 and M7]",
+  "a": "Mine — not slop"
+ },
+ {
+  "q": "Fitting [M7's network starts as a factor ≡ 1 on each patient's fitted law]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Fitting [Corner search objective ((ratio−1.03)/0.30)² + ((ΔICP−10.23)/1.50)², with Pjc allowed up to 200 mmHg]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Plotting [Recording drawn as slate scatter, model as lines, on every data panel]",
+  "a": "Examined · passable"
+ },
+ {
+  "q": "Plotting [TCD velocity against model flow on twin axes, one gain per vessel anchored before onset]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Plotting [Model colours: M1 blue #2d40bd, M4/'M2' pink #C2185B; one colour pair per model]",
+  "a": "Examined · passable"
+ },
+ {
+  "q": "Plotting [Compliance drawn as V against each element's own Ptm (and against Pds in the 3-D notebooks)]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Plotting [Arterial phase shifted at plot time (pa_phase_shift), not fixed in the model]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Plotting [Zeros aligned only when both axis ranges already span 0]",
+  "a": "Unexamined · passable"
+ },
+ {
+  "q": "Plotting [Report naming: M4 shown as 'M2'/'H-M2', M5 as 'Model 2', recordings as letters A–D]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Plotting [Each deck's panel choices kept in untracked layout.jl files (no history)]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Model comparison [M1 and M4 compared under one invented schedule (Protocol.jl), not a patient's timing]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Model comparison [Unfitted M4, driven by each patient's compression timing, as the reference column]",
+  "a": "Unexamined · passable"
+ },
+ {
+  "q": "Model comparison [k-medoids: ARI against model / run / phase decides whether beats can tell M1 from M3]",
+  "a": "Unexamined · critical"
+ },
+ {
+  "q": "Model comparison [Ursino Fig. 9: raised CSF production stands in for a constant infusion; breakpoint from a two-segment fit]",
+  "a": "Don't know"
+ },
+ {
+  "q": "Model comparison [Fit M1 vs Fit M5 compared from each fit's own trace CSV, not from deck exports (they differ by up to ~6 mmHg)]",
+  "a": "Don't know"
+ },
+ {
+  "q": "Model comparison [Jugular h-sweeps: the overshoot ratio (1.7–2.5× vs 4.3–5.1×) as the M1/M4 discriminator]",
+  "a": "Don't know"
+ },
+ {
+  "q": "Model comparison [M6's conclusion: 'flat pulse, big step, correct level: pick two']",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Model comparison [Missing compartments drawn as absent (null), not as zero, in the M1-vs-M4 volume bars]",
+  "a": "Examined · critical"
+ },
+ {
+  "q": "Where do you expect the most unexamined slop?",
+  "a": "plotter/plotting.jl and panels_deck.jl (6,360 lines, two copies of the panels), the fit scripts (fit.jl ×2, Data.jl, prep_jugular_data.py), the compact replicas (M6 ude_cv.jl, M7 ude_cs.jl) and their conclusions, script headers and READMEs that state findings, the reports' prose and figure captions, notebook narration (now in Seafile)"
+ },
+ {
+  "q": "How should the full audit run?",
+  "a": "Sample 30 decisions per pillar first, then decide"
+ },
+ {
+  "q": "Audit scope",
+  "a": "human_m123 (this branch), the notebooks in Seafile, brainphysio-tutorials, the .protocols/ documents, brainphysio-tutorials should include the seafile notebooks but the data should remain in seafile"
+ },
+ {
+  "q": "Default level for a change in… [Model_*/Model.jl, Elements.jl, Params.jl, VarDefs.jl, src/**]",
+  "a": "Critical by default"
+ },
+ {
+  "q": "Default level for a change in… [Protocol.jl, SteadyState.jl, Protocol_patient.jl]",
+  "a": "Critical by default"
+ },
+ {
+  "q": "Default level for a change in… [fits/**/fit.jl, Data.jl, verify_fit.jl, valve_diag.jl]",
+  "a": "Critical by default"
+ },
+ {
+  "q": "Default level for a change in… [fits/**/fit/<patient>.jl (generated parameters)]",
+  "a": "Passable by default"
+ },
+ {
+  "q": "Default level for a change in… [scripts/prep_jugular_data.py]",
+  "a": "Critical by default"
+ },
+ {
+  "q": "Default level for a change in… [plotter/plotting.jl, panels_*.jl, plot_runs.jl]",
+  "a": "Passable by default"
+ },
+ {
+  "q": "Default level for a change in… [plotter/registry.jl (run ids, colours, labels)]",
+  "a": "Critical by default"
+ },
+ {
+  "q": "Default level for a change in… [modelplots/<deck>/layout.jl]",
+  "a": "Passable by default"
+ },
+ {
+  "q": "Default level for a change in… [simstore, SweepSpec, run_all and replot drivers]",
+  "a": "Passable by default"
+ },
+ {
+  "q": "Default level for a change in… [README, docs/, comment-only changes]",
+  "a": "Critical by default"
+ },
+ {
+  "q": "Default level for a change in… [.protocols/*.md]",
+  "a": "Critical by default"
+ },
+ {
+  "q": "Flag as critical wherever it appears",
+  "a": "a comment or docstring that states a number or a finding, a changed tolerance, dtmax, maxiters or clamp, a deleted test, gate or assertion, a different function sequence in the plotter which marks existence of new slop"
+ },
+ {
+  "q": "When should it run?",
+  "a": "When staging: a git stage wrapper or alias, before any commit exists, pre-commit hook (can refuse the commit), pre-push (before work leaves the machine), CI on pull requests to main"
+ },
+ {
+  "q": "How does the check know a hunk is AI-written?",
+  "a": "The author declares it at staging, hunk by hunk, Presumption: everything is AI-written unless marked human"
+ },
+ {
+  "q": "How is a hunk marked EXAMINED?",
+  "a": "An interactive review that walks the critical hunks and asks for a one-line reason each, A decision-log entry (DECISIONS.md) referenced by id, A reviewer's approval on the pull request, An inline comment: # examined: who, when, why"
+ },
+ {
+  "q": "What should each level trigger? [Unexamined · critical]",
+  "a": "Show in the staging report"
+ },
+ {
+  "q": "What should each level trigger? [Unexamined · passable]",
+  "a": "Show in the staging report"
+ },
+ {
+  "q": "What should each level trigger? [Examined · critical]",
+  "a": "Show in the staging report"
+ },
+ {
+  "q": "What should each level trigger? [Examined · passable]",
+  "a": "Show in the staging report"
+ },
+ {
+  "q": "The registered commit message carries…",
+  "a": "nothing useful in the message"
+ },
+ {
+  "q": "Where does the ledger live?",
+  "a": "Tracked in the repo, public with the code"
+ },
+ {
+  "q": "Should Claude (the assistant writing this form) be bound by the same protocol in this repo?",
+  "a": "Yes: its edits are logged and count as unexamined until I mark them"
+ },
+ {
+  "q": "How much friction per commit is acceptable for a student?",
+  "a": "1"
+ },
+ {
+  "q": "Beyond the staging check, which measures?",
+  "a": "The protocol read at onboarding (.protocols/AI_SLOP_PROTOCOL.md), A pull-request template with a checklist per pillar, A decision log per model family, Explain-back: a critical change is explained to the supervisor without the AI, Claims in prose must cite the cell, run or test that produced them"
+ },
+ {
+  "q": "Who decides that a student's change is critical?",
+  "a": "The student"
+ },
+ {
+  "q": "What should the public repo say about AI?",
+  "a": "Nothing public; the protocol stays internal"
+ },
+ {
+  "q": "Anything else: slop you already know about, or what would convince you the protocol works",
+  "a": "testing on my current code will be the check that it works"
+ }
+]

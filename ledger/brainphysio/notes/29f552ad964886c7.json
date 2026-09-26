@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:39",
+ "cost_usd": 0.037888,
+ "prompt_version": "note-v1",
+ "meaning": "The comment justifies giving Rspine₊q its own panel, separate from the outflow panel, on the grounds that it is an internal craniospinal redistribution rather than a drainage route. It backs this with cited magnitudes (±0.98 mL/s non-pulsatile, -4.2..57.9 pulsatile for p083, vs outflows ~0.005), which are the stated reason a shared or twin axis is rejected.",
+ "could_move": [
+  {
+   "what": "The quoted magnitudes are from p083 only; if another patient deck has smaller Rspine₊q or larger outflows, the scale argument for a separate panel weakens.",
+   "cite": "plotter/plotting.jl:2781"
+  },
+  {
+   "what": "Panel layout and axis choice for every deck that renders this group changes with the decision, e.g. the p081 and p137 jugular compression decks.",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "The sibling claim that brain₊ext₊q is -(Rspine₊q + shunt₊q) is asserted in the same comment block and is what makes the single-element choice correct; if the model equation differs, the panel content is mislabelled.",
+   "cite": "plotter/plotting.jl:2786"
+  }
+ ],
+ "expectation": "Unknown. The numbers cannot be confirmed from the context given, and the reach trace found no references to this site, so I cannot tell which decks actually draw this panel or whether the p083 numbers still hold.",
+ "check": {
+  "command": "julia --project=. Model_3/replot_deck.jl jugular_compression_m1_vs_m5_p083",
+  "why": "Replots the p083 deck named in the comment without re-fitting, so the separated Rspine panel and its axis range can be compared against the quoted ±0.98 and -4.2..57.9 values."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

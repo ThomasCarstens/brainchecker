@@ -1,0 +1,16 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:21:40",
+ "cost_usd": 0.06245645000000001,
+ "prompt_version": "note-v1",
+ "meaning": "Line 451 converts the second event's linear ramp fraction into a quintic smoothstep (6s^5-15s^4+10s^3), so that perturbation starts and ends with zero first and second derivative instead of a kinked linear ramp. The onset shape over `duration` is fixed by this polynomial, not fitted.",
+ "could_move": [],
+ "expectation": "Size unknown. Direction: versus a linear ramp, the early rise is delayed and the mid-ramp gradient is steeper, so onset times read later. Effects should be confined to windows of length `duration` after t_start2; whether they propagate into fitted parameter values cannot be told from this context.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_1/replot_deck.jl jugular_compression_m5_vs_data",
+  "why": "Replots one existing deck instead of re-fitting, so the ramp window around t_start2 can be inspected directly against the recording."
+ },
+ "confidence": "low",
+ "dropped_uncited": 5
+}

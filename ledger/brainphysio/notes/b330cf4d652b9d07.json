@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:28:15",
+ "cost_usd": 0.05907155,
+ "prompt_version": "note-v1",
+ "meaning": "The comment claims the old M4 jugular column was not comparable to the patient columns, because the generic deck ran a 160 s Pext ramp while the patient créneaux run to ~418 s, and asserts the fix is one M4 jugular run per patient schedule while the abdominal ramp and tilt can keep a single shared M4 run.",
+ "could_move": [
+  {
+   "what": "The numbers 160.0, 418.37 and 418.75 and the ends_early flag are stated in prose; if the patient créneaux schedules change, the comment becomes wrong and the comparability argument silently stales.",
+   "cite": "scripts/run_patient_matrix.sh:20"
+  },
+  {
+   "what": "The claim that compression window and amplitude are per-patient drives the need for Model_3/run_jc_patients.jl; if that is not actually per-patient, the extra runs are unnecessary.",
+   "cite": "scripts/run_patient_matrix.sh:21"
+  },
+  {
+   "what": "The claim that abdominal ramp and tilt schedules are identical across models and patients means those columns stay built from one shared M4 run; if Protocol.jl differs per patient anywhere, those columns are not like-for-like.",
+   "cite": "scripts/run_patient_matrix.sh:24"
+  },
+  {
+   "what": "M5 patients 137 and 150 are said to be fitted but not simulated, which is why they appeared in the payload missing array; that state may already have changed.",
+   "cite": "scripts/run_patient_matrix.sh:14"
+  }
+ ],
+ "expectation": "If the claim holds, per-patient M4 jugular runs should end near 418 s instead of 160 s, and the animation should show four patient columns instead of two. The size of the change in the compared curves is unknown from this context.",
+ "check": {
+  "command": "bash scripts/run_patient_matrix.sh --dry-run 2>&1 | head -40",
+  "why": "Prints the planned runs and their schedules without re-fitting, so a reader can see whether one M4 jugular run per patient is emitted and whether abdominal/tilt still share one run. The reach trace found no references or decks for this script, so I could not confirm a --dry-run flag exists; if it does not, the command fails fast and cheaply."
+ },
+ "confidence": "low"
+}

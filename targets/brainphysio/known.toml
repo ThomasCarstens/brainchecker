@@ -1,0 +1,335 @@
+# The 32 decisions Thomas classified in the protocol form (26 Sep 2026, Section 3), located
+# in human_m123 and read against the internship documents (fitting report, CIS report,
+# "Performing the Analysis" Google Doc, repo guide).
+#
+# `form` is his answer and is authoritative for examination. `evidence` is what the
+# documents say; a report passage is shown as evidence to confirm, never promoted to
+# "examined" on its own: three rows (K28-K30) are written up in a report and he still
+# answered "Don't know".
+#
+# evidence.kind: rationale | check | limitation | own-voice (first person, his working
+# notes or "I" in a report) | ai (text that names or quotes the AI) | documented
+
+[[decision]]
+id = "K01"
+pillar = "modelling"
+title = "Every pressure ramp is a quintic smootherstep 6s⁵−15s⁴+10s³ ('a smooth function that Claude implemented')"
+where = ["Model_1/Model.jl:825", "Model_1/Model.jl:836", "Model_3/Model.jl:705", "Model_3_celia/Model.jl:691", "Model_1/Elements.jl:809"]
+form = "Examined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§2.3.2, Équ. 2; App. 9 point 2", kind = "rationale", quote = "Smootherstep rather than a step or a linear ramp because the solver is stiff: a discontinuous boundary forces Rodas5P to restart its step-size control at onset, and a C1 ramp still leaves a kink in the derivative. The quintic is C2." },
+  { doc = "Code comment", at = "Model_1/Model.jl:836", kind = "ai", quote = "# Using a smooth function that Claude implemented." },
+]
+
+[[decision]]
+id = "K02"
+pillar = "modelling"
+title = "Model_3 (ex-M4): periodic steady-state tolerance set to 1.3e-5, because 1e-6 never converged"
+where = ["Model_3/Model.jl:16"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§4.7", kind = "limitation", quote = "The system has no true equilibrium at the fitted parameters… 'steady state' in this report means 'converged to tolerance', not 'fixed point'. (About M5's static solve, not this M4 tolerance.)" },
+]
+
+[[decision]]
+id = "K03"
+pillar = "modelling"
+title = "Pulsatile runs start from a converged limit cycle, not from the flat-Pa fixed point (M5, then M1)"
+where = ["fits/m3/Model_5/main.jl:206", "Model_1/limit_cycle.jl:1"]
+form = "Examined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§2.4, Tabl. 4", kind = "check", quote = "Full arterial waveform integrated to a converged limit cycle… Adds a small mean offset relative to the flat-Pa fixed point — 0.009 mmHg on 150, 0.34 mmHg on 083 — which stage A carries." },
+]
+
+[[decision]]
+id = "K04"
+pillar = "modelling"
+title = "Autoregulation exponent clamped to ±40 in the compact M7 replica (RK4 overflow)"
+where = ["fits/m1/Model_7/ude_cs.jl:332", "fits/m1/Model_7/ude_cs.jl:333"]
+form = "Unexamined · critical"
+evidence = []
+
+[[decision]]
+id = "K05"
+pillar = "modelling"
+title = "Compact M6 replica: measured ABP as its boundary, plus a 20 ms jugular-area relaxation that M5 does not have"
+where = ["fits/m3/Model_6/ude_cv.jl:141", "fits/m3/Model_6/ude_cv.jl:33"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§3.6 (patient 137)", kind = "own-voice", quote = "part of 137's discrepancy may be an artefact of the reduced solver rather than a statement about the patient. I have flagged it rather than resolved it." },
+]
+
+[[decision]]
+id = "K06"
+pillar = "modelling"
+title = "Re-deriving a fitted M1 must use Rss's component default (212.8), not the cascade value"
+where = ["fits/m1/Model_7/ude_cs.jl:167", "Model_1/run_jc_patients.jl:239"]
+form = "Unexamined · critical"
+evidence = []
+
+[[decision]]
+id = "K07"
+pillar = "fitting"
+title = "Stage A is scored on the 1 Hz respiration-free mean; the pulse only enters in stage B"
+where = ["fits/m3/Model_5/fit.jl:280"]
+form = "Examined · critical"
+evidence = [
+  { doc = "Fitting report", at = "Tabl. 2, stage 4", kind = "rationale", quote = "A 10 s centred box filter, applied identically to the data and to the model output. This is the step that produces the 1 Hz mean-ICP series used as the stage A target." },
+  { doc = "Fitting report", at = "App. 8", kind = "rationale", quote = "Cost separation is the reason for the stage split… Folding Ca_v into stage A would make every one of 1000–1700 evaluations 10× dearer." },
+]
+
+[[decision]]
+id = "K08"
+pillar = "fitting"
+title = "The free parameters and their search box (7 of 24 stage-A estimates sit on a bound)"
+where = ["fits/m3/Model_5/fit.jl:358", "fits/m3/Model_5/fit.jl:364", "fits/m3/Model_5/fit.jl:388"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "Fitting report", at = "Tabl. 5; §4.3", kind = "rationale", quote = "That is why P_jc_amp's upper bound was pulled down to 80 mmHg and k_ijvs_v was added to the search instead… It duly pinned at its floor in three of four patients." },
+  { doc = "Fitting report", at = "§3.4, Tabl. 8", kind = "limitation", quote = "Seven of the twenty-four stage A estimates sit on a bound… It should not be reported as an estimate, and it is daggered here for that reason." },
+  { doc = "Performing the Analysis", at = "Chp 2, Model Finding 1", kind = "own-voice", quote = "The external pressure is bounded at 80mmHg / 10kPa… K is pushed down x30 to allow for the area change we are aiming for [images needed]" },
+]
+
+[[decision]]
+id = "K09"
+pillar = "fitting"
+title = "Fitted E_v lands 3–7× above Marmarou's value in all four patients, accepted as is"
+where = ["fits/m3/Model_5/fit/081.jl:16"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§3.4", kind = "limitation", quote = "E_v is 3–7× above the Marmarou range in all four patients… This suggests that the craniospinal system is far stiffer than the literature says in order to produce a step of the measured size." },
+  { doc = "Performing the Analysis", at = "Chp 2, The Discussion", kind = "own-voice", quote = "Mainly, the elastance of the cranium is too high in our fit. I have a derivation that shows the Rsp / kE minimization could actually prevent these major dP/dt changes." },
+]
+
+[[decision]]
+id = "K10"
+pillar = "fitting"
+title = "Sampling rate FS = 100 Hz in prep_jugular_data.py (probably 200 Hz)"
+where = ["scripts/prep_jugular_data.py:53"]
+form = "Mine — not slop"
+evidence = [
+  { doc = "Fitting report", at = "App. 11, Tabl. 21", kind = "own-voice", quote = "I have kept 100 Hz throughout because that is what was supplied, and flagged the consequence wherever a time constant is quoted." },
+  { doc = "Fitting report", at = "§4.7; §4.8", kind = "limitation", quote = "The sampling rate is unverified… If it is 200 Hz, every duration in this report halves… Resolve the sampling rate. One email." },
+]
+
+[[decision]]
+id = "K11"
+pillar = "fitting"
+title = "Artefact rule: range clip + sustained-excursion test; gaps under 2 s interpolated"
+where = ["scripts/prep_jugular_data.py:69"]
+form = "Examined · passable"
+evidence = [
+  { doc = "Fitting report", at = "Tabl. 2; App. 11", kind = "rationale", quote = "The despike test is relative, not absolute. A fixed clip threshold would remove genuine high-ICP beats… Gaps are not invented. Excursions under 2 s are interpolated; anything longer stays a gap." },
+]
+
+[[decision]]
+id = "K12"
+pillar = "fitting"
+title = "Stage B: Ca_v by expand-then-bisect; valve chatter gate CHATTER_MAX = 1.5 (0.05 killed 137's fit)"
+where = ["fits/m3/Model_5/fit.jl:941", "fits/m3/Model_5/valve_diag.jl:102"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§2.6.3; App. 8, Tabl. 19", kind = "rationale", quote = "It is scanned, not optimised, and that is a deliberate choice with a diagnostic payoff… A scan reports the whole curve. (CHATTER_MAX is not mentioned in any report.)" },
+]
+
+[[decision]]
+id = "K13"
+pillar = "fitting"
+title = "One onset for every patient: model time = data time + 120 s"
+where = ["fits/m3/Model_5/Protocol_patient.jl:47", "Model_1/Protocol_patient.jl:59"]
+form = "Unexamined · passable"
+evidence = [
+  { doc = "Fitting report", at = "§3.2 b", kind = "check", quote = "The rise must sit exactly on t = 0 by construction of the detector, so this panel is checking that the detector did not lock onto something else. (The 120 s offset itself is not discussed.)" },
+]
+
+[[decision]]
+id = "K14"
+pillar = "fitting"
+title = "Patient 150 (D) left out; no holdout for M1 and M7"
+where = ["fits/m1/fits/run_fits.sh:4", "fits/m1/fits/run_fits.sh:31"]
+form = "Mine — not slop"
+evidence = [
+  { doc = "Performing the Analysis", at = "Chp 2, Materials", kind = "own-voice", quote = "We choose to drop Patient D from the dataset due to what seems like a faulty clinical procedure." },
+  { doc = "Fitting report", at = "§3.2 a", kind = "rationale", quote = "150 is carried through the fitting because it costs nothing to carry, but it is not used to support any conclusion." },
+]
+
+[[decision]]
+id = "K15"
+pillar = "fitting"
+title = "M7's network starts as a factor ≡ 1 on each patient's fitted law"
+where = ["fits/m1/Model_7/ude_cs.jl:271"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "Session notes (14 Sep)", at = "Model_7 memory", kind = "documented", quote = "Asked for by Thomas on 14 Sep: training starts at M1 as fitted to each patient. He rated it unexamined: asking for a design is not examining it." },
+]
+
+[[decision]]
+id = "K16"
+pillar = "fitting"
+title = "Corner search objective ((ratio−1.03)/0.30)² + ((ΔICP−10.23)/1.50)², with Pjc allowed up to 200 mmHg"
+where = ["fits/m3/Model_6/target_search.jl:11"]
+form = "Unexamined · critical"
+evidence = []
+
+[[decision]]
+id = "K17"
+pillar = "plotting"
+title = "Recording drawn as slate scatter, model as lines, on every data panel"
+where = ["plotter/panels_data.jl:11", "plotter/panels_data.jl:165"]
+form = "Examined · passable"
+evidence = [
+  { doc = "Fitting report", at = "Fig. 21 caption", kind = "documented", quote = "Top left — full record, model (blue) against recording (black dots)." },
+]
+
+[[decision]]
+id = "K18"
+pillar = "plotting"
+title = "TCD velocity against model flow on twin axes, one gain per vessel anchored before onset"
+where = ["plotter/panels_data.jl:481"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§2.5.1; Tabl. 6", kind = "rationale", quote = "TCD calibration: one scalar gain per vessel, anchored on the pre-onset window… it is what showed the gain is not constant, and so that the channel cannot be scored." },
+]
+
+[[decision]]
+id = "K19"
+pillar = "plotting"
+title = "Model colours: M1 blue #2d40bd, M4/'M2' pink #C2185B; one colour pair per model"
+where = ["plotter/registry.jl:166", "plotter/registry.jl:188"]
+form = "Examined · passable"
+evidence = [
+  { doc = "Performing the Analysis", at = "Chp1, h-sweep on transmural pressures", kind = "own-voice", quote = "m1 in blue (by convention), m3 in orange (by convention)" },
+]
+
+[[decision]]
+id = "K20"
+pillar = "plotting"
+title = "Compliance drawn as V against each element's own Ptm (and against Pds in the 3-D notebooks)"
+where = ["plotter/plotting.jl:1686", "plotter/panels_deck.jl:741"]
+form = "Examined · critical"
+evidence = [
+  { doc = "Performing the Analysis", at = "ARP analysis, Compliance Evolution", kind = "own-voice", quote = "Unlike Ptm, Pds is common to both equations above. Putting Pds on PV diagrams with time as the vertical axis, we plot a PV diagram of Cspine/Civp." },
+  { doc = "Fitting report", at = "App. 7.4", kind = "rationale", quote = "Because Ptm is not comparable between the models but Pds is, the compliance behaviour was decoupled from the abdominal boundary." },
+]
+
+[[decision]]
+id = "K21"
+pillar = "plotting"
+title = "Arterial phase shifted at plot time (pa_phase_shift), not fixed in the model"
+where = ["fits/m3/Model_5/Data.jl:213", "Model_1/Data.jl:225", "plotter/panels_data.jl:349"]
+form = "Unexamined · critical"
+evidence = []
+
+[[decision]]
+id = "K22"
+pillar = "plotting"
+title = "Zeros aligned only when both axis ranges already span 0"
+where = []
+outside = "Only on M5_extended (Model_3/plotting.jl:658, align_zero!): commits 88a5ec6e and 78b13a6b were never merged into human_m123."
+form = "Unexamined · passable"
+evidence = [
+  { doc = "CIS report", at = "Fig. 10 caption", kind = "documented", quote = "both axes put zero at the same height" },
+  { doc = "Session notes (18 Sep)", at = "BC tests memory", kind = "documented", quote = "Thomas: never stretch an axis down to an absent 0. He rated it unexamined: asking is not examining the implementation." },
+]
+
+[[decision]]
+id = "K23"
+pillar = "plotting"
+title = "Report naming: M4 shown as 'M2'/'H-M2', M5 as 'Model 2', recordings as letters A–D"
+where = ["plotter/plot_runs.jl:403", "plotter/plot_runs.jl:410"]
+form = "Examined · critical"
+evidence = [
+  { doc = "CIS report", at = "§2.2", kind = "documented", quote = "In the figures that follow, H-M1 is labelled M1 in the legends and H-M2 is labelled M2." },
+  { doc = "Fitting report", at = "Tabl. 3", kind = "documented", quote = "Numbering is historical, not hierarchical." },
+]
+
+[[decision]]
+id = "K24"
+pillar = "plotting"
+title = "Each deck's panel choices kept in untracked layout.jl files (no history)"
+where = [".gitignore:105"]
+form = "Examined · critical"
+evidence = [
+  { doc = "Repo guide", at = "§7", kind = "documented", quote = "Since 24 September nothing under modelplots/ is tracked." },
+]
+
+[[decision]]
+id = "K25"
+pillar = "comparison"
+title = "M1 and M4 compared under one invented schedule (Protocol.jl), not a patient's timing"
+where = ["Protocol.jl:78", "Protocol.jl:79"]
+form = "Unexamined · critical"
+evidence = [
+  { doc = "CIS report", at = "§2.3", kind = "rationale", quote = "This report uses jugular compression alone, so that the abdominal and postural boundaries do not move at the same time… any difference between them under this protocol comes from how the models are built." },
+  { doc = "Performing the Analysis", at = "Chp 1, Methods", kind = "own-voice", quote = "In this presentation, we proceed with a jugular compression to avoid any unnecessary complexity." },
+]
+
+[[decision]]
+id = "K26"
+pillar = "comparison"
+title = "Unfitted M4, driven by each patient's compression timing, as the reference column"
+where = ["Model_3/run_jc_patients.jl:1"]
+form = "Unexamined · passable"
+evidence = [
+  { doc = "Fitting report", at = "§3.7, Tabl. 9", kind = "documented", quote = "M4 rows are the unfitted reference at each patient's schedule — they are nearly identical to each other, as they should be, since only the schedule differs." },
+]
+
+[[decision]]
+id = "K27"
+pillar = "comparison"
+title = "k-medoids: ARI against model / run / phase decides whether beats can tell M1 from M3"
+where = ["Model_3/kmedoids_m1m3_analysis.py:11"]
+form = "Unexamined · critical"
+evidence = []
+
+[[decision]]
+id = "K28"
+pillar = "comparison"
+title = "Ursino Fig. 9: raised CSF production stands in for a constant infusion; breakpoint from a two-segment fit"
+where = ["scripts/ursino_validation.jl:55", "scripts/ursino_plots.jl:61"]
+form = "Don't know"
+evidence = [
+  { doc = "Fitting report", at = "§3.13, Tabl. 13; Tabl. 6", kind = "documented", quote = "Both our models saturate where Ursino's curve steepens. (The report gives the result and the two-segment fit, not why raised production may stand in for an infusion.)" },
+]
+
+[[decision]]
+id = "K29"
+pillar = "comparison"
+title = "Fit M1 vs Fit M5 compared from each fit's own trace CSV, not from deck exports (they differ by up to ~6 mmHg)"
+where = ["scripts/plot_fit_1_vs_2.py:4"]
+form = "Don't know"
+evidence = [
+  { doc = "Performing the Analysis", at = "Chp 2, Findings", kind = "documented", quote = "Model Finding 2: M1 and M2 fitted to Recording B (heading only, no content yet)" },
+]
+
+[[decision]]
+id = "K30"
+pillar = "comparison"
+title = "Jugular h-sweeps: the overshoot ratio (1.7–2.5× vs 4.3–5.1×) as the M1/M4 discriminator"
+where = []
+outside = "Seafile rapports-de-stage-thomas-2026/cis-report/make_bc_figs.py and bc_numbers.json (not in the repo)."
+form = "Don't know"
+evidence = [
+  { doc = "CIS report", at = "§3.7", kind = "rationale", quote = "The peak and the hold each depend on the patient's h… Their ratio has no units and does not need h. This is why the transient is useful." },
+  { doc = "Performing the Analysis", at = "IR_BC Tests, b/", kind = "own-voice", quote = "Separating each effect from the other requires an independent test, and this is where a parameter sweep fixes one h and sweeps the other. (The sweep design is his; the ratio metric appears only in the CIS report.)" },
+]
+
+[[decision]]
+id = "K31"
+pillar = "comparison"
+title = "M6's conclusion: 'flat pulse, big step, correct level: pick two'"
+where = []
+outside = "Stated in the fitting report (Seafile) and the M6 notebooks, not in code."
+form = "Examined · critical"
+evidence = [
+  { doc = "Fitting report", at = "§1.6; §3.9", kind = "documented", quote = "The trade-off is one-dimensional and fully visible, which makes it a structural finding about the model rather than an optimisation failure." },
+  { doc = "Session notes (M6)", at = "Model_6 memory", kind = "limitation", quote = "Joint random sampling later gave a 2-D reachable set (the one-at-a-time scan had made it look like one diagonal). The report's 'one-dimensional' wording may predate that." },
+]
+
+[[decision]]
+id = "K32"
+pillar = "comparison"
+title = "Missing compartments drawn as absent (null), not as zero, in the M1-vs-M4 volume bars"
+where = ["hack/export_volumes.py:12"]
+form = "Examined · critical"
+evidence = []

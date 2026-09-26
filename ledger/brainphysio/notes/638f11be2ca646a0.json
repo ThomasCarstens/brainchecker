@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:19:25",
+ "cost_usd": 0.0358934,
+ "prompt_version": "note-v1",
+ "meaning": "The vessel element defaults to having its resistance-evolution law switched on (`activate_resistance_evolution = 1`), so dR/dV is non-zero unless a caller explicitly passes 0. Any vessel built without naming this flag inherits collapse-dependent resistance rather than a constant resistance.",
+ "could_move": [
+  {
+   "what": "Vessel resistance dynamics in every element constructor that shares this default, so pressures and flows in jugular-compression runs can shift",
+   "cite": "Model_3_celia/Elements.jl:83"
+  },
+  {
+   "what": "Model-level vessel instantiations that do not set the flag explicitly",
+   "cite": "Model_1/Model.jl:1249"
+  },
+  {
+   "what": "Bistability results, since basin boundaries depend on whether dR/dV is active",
+   "cite": "Model_3/bistability_confirm_plot.jl"
+  },
+  {
+   "what": "Fitted parameter values and fit quality for patient decks",
+   "cite": "jugular_compression_m5_vs_p083"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: with the flag at 1, resistance varies with volume, so collapse regimes are likely more nonlinear than with 0. Whether the many callers rely on the default or override it cannot be told from this context.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl",
+  "why": "Re-runs one fitted case without a full re-fit, so a changed default shows up as a mismatch against stored fit output."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

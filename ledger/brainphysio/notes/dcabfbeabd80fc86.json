@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:22:37",
+ "cost_usd": 0.036655499999999994,
+ "prompt_version": "note-v1",
+ "meaning": "The comment records measured pulsatile-minus-non-pulsatile mean ICP offsets per window (+0.016 baseline, -2.106 plateau, +0.250 post) and argues that only the baseline term should ever be used as a correction, because the plateau term is dominated by the model's known-wrong 22 mmHg plateau pulse. It is a documented refusal to apply a plateau mean-ICP correction in stage A of the fit.",
+ "could_move": [
+  {
+   "what": "The three numbers are ROUTE C outputs of verify_fit.jl on this deck's own trajectories; if the fitted parameters in fits/m3/Model_5/fit.jl change, the offsets and the argument's magnitudes go stale.",
+   "cite": "fits/m3/Model_5/fit.jl:180-183"
+  },
+  {
+   "what": "The claim leans on a plateau pulse of 22 mmHg vs a patient pulse of 4.0 quoted from the README; if that README statement or the patient target changes, the reasoning for rejecting the -2.106 correction weakens.",
+   "cite": "fits/m3/Model_5/fit.jl:186-188"
+  },
+  {
+   "what": "Any deck comparing m5 against patient data could show a different plateau pulse mismatch and so a different sign/size of the mean offset.",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model decks would carry this no-correction convention into m1/m4/m6 comparisons, where the plateau pulse error may differ.",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  }
+ ],
+ "expectation": "Applying the rejected plateau correction would shift plateau mean ICP by about -2.1 mmHg in stage A; the baseline term (+0.016) is small enough to be near-negligible, and the post term (+0.250) is intermediate. Whether any of these shifts change the fitted parameters is unknown from this context.",
+ "check": {
+  "command": "julia --project=. verify_fit.jl fits/m3/Model_5/fit.jl",
+  "why": "Re-runs the ROUTE C window-by-window pulsatile minus non-pulsatile mean ICP measurement that produced the three quoted numbers, without a full re-fit, so the comment's numbers can be confirmed or found stale."
+ },
+ "confidence": "low"
+}

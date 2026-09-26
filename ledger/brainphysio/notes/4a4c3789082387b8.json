@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:24:46",
+ "cost_usd": 0.0523257,
+ "prompt_version": "note-v1",
+ "meaning": "The ICP fit panel deliberately layers the pulsatile band at the bottom, the recording at 0.4 opacity in the middle, and the non-pulsatile mean on top, because the mean is the curve the fit was scored against. The comment also records that a rejected alternative (mean last at 0.5 with a halo) was tried.",
+ "could_move": [
+  {
+   "what": "Comparison figures in the CIS report show the recording partly covered by the mean curve, so overlap judged by eye may look tighter or looser than the residuals are.",
+   "cite": "plotter/panels_data.jl:153"
+  },
+  {
+   "what": "Decks where the pulsatile band is a full-height block during compression hide the recording behind it.",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "The 'still legible' claim about the alternative ordering is an assertion I cannot verify from the code as it stands.",
+   "cite": "plotter/panels_data.jl:158"
+  }
+ ],
+ "expectation": "No effect on fitted parameters or residuals; it changes how tight the fit appears. Magnitude unknown and deck-dependent, largest where the pulsatile band is tall.",
+ "check": {
+  "command": "grep -n \"plot!\\|alpha\\|linewidth\" plotter/panels_data.jl",
+  "why": "Confirms the real draw order and opacities in the panel match the comment, without re-fitting."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

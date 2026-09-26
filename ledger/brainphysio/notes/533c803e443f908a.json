@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:20:21",
+ "cost_usd": 0.07450195,
+ "prompt_version": "note-v1",
+ "meaning": "Setting DECK_CHOICE before the registry include makes EXPERIMENT strip to \"jugular_compression\", so the run picks up that experiment's protocol and target recordings rather than anything keyed to the \"_m1_analysis\" suffix. This fixes which patient traces the model output is compared against and which deck the figures land in.",
+ "could_move": [
+  {
+   "what": "Which deck the m1 jugular-compression figures are written to, and what is overlaid against patient data",
+   "cite": "Model_1/run_jc_patients.jl:101"
+  },
+  {
+   "what": "Comparison pairings in the patient decks if the stripped EXPERIMENT selects different targets",
+   "cite": "jugular_compression_m1_vs_p081"
+  },
+  {
+   "what": "Cross-model panels that assume the same experiment label on both sides",
+   "cite": "jugular_compression_m1_vs_m4"
+  },
+  {
+   "what": "The verification against fit.jl's own trace that this ordering is meant to make checkable",
+   "cite": "Model_1/verify_fit.jl"
+  },
+  {
+   "what": "Figures in the Fitting report (patient decks) and the CIS report jug-* figures",
+   "cite": "Model_1/replot_deck.jl"
+  }
+ ],
+ "expectation": "Unknown. The include order controls label stripping, so it could change deck routing and target selection, or be inert if the suffix is ignored downstream. I cannot tell which from this context.",
+ "check": {
+  "command": "julia --project Model_1/verify_fit.jl",
+  "why": "Re-runs the fit.jl trace verification for Model_1 without a full re-fit, so a mismatch in what is compared with what should surface cheaply."
+ },
+ "confidence": "low"
+}

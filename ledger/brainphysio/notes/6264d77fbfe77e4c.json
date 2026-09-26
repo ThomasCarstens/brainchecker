@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:27:01",
+ "cost_usd": 0.058948650000000005,
+ "prompt_version": "note-v1",
+ "meaning": "This run stamps its outputs as model \"m4\", experiment \"jugular_compression\", variant JC_PATIENT, run_id \"m4jc<patient>\". Downstream comparison decks use these labels to decide which curve is m4 and which patient it is paired against.",
+ "could_move": [
+  {
+   "what": "Decks pairing m4 against another model resolve the m4 side by this model/run_id label.",
+   "cite": "jugular_compression_m1_vs_m4"
+  },
+  {
+   "what": "Patient-specific m4-vs-m5 comparison selects the m4 curve by variant JC_PATIENT; a mismatch pairs the wrong patient.",
+   "cite": "jugular_compression_m4_vs_m5_p081"
+  },
+  {
+   "what": "protocol=\"pressure\" and ramp_target=\"Pext\" tag the forcing, separating Pext sweeps from Pabdo sweeps.",
+   "cite": "m1_jugular_compression_h_Pext_sweep"
+  },
+  {
+   "what": "pulsatile=true separates this trace from steady runs in exported comparisons.",
+   "cite": "Model_3/bistability_export_pulsatile_basinA.jl"
+  },
+  {
+   "what": "CIS report jug-* figures and the fitting report patient decks are assembled from these metadata labels.",
+   "cite": "Model_3/run_jc_081.jl:199"
+  }
+ ],
+ "expectation": "Unknown in size. This writes labels, not physics, so the solved trajectory should be unchanged; the risk is a silent re-pairing in comparison decks rather than a shifted curve. I cannot tell from this context which decks depend on the exact strings, so I cannot call it safe.",
+ "check": {
+  "command": "julia --project=. Model_1/replot_deck.jl jugular_compression_m4_vs_m5_p081",
+  "why": "Replots one m4-containing deck from existing outputs, exposing a wrong or missing pairing without re-fitting or re-solving."
+ },
+ "confidence": "low"
+}

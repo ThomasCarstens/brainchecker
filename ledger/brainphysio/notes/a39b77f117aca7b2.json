@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:13:54",
+ "cost_usd": 0.06844295,
+ "prompt_version": "note-v1",
+ "meaning": "Rss (sagittal-sinus outflow resistance) is pinned to 212.8 dyn·s/mL, the Brain_1 build-time default, instead of the cascade-consistent (Psinus − Pcv)/Q value. This keeps M7 on the same venous outflow resistance every fitted M1 run used, so the NN compliance is trained against the same baseline.",
+ "could_move": [
+  {
+   "what": "Rest ICP level: the comment records that the cascade value instead moved patient 137's rest ICP from 7.9 to 12.5 mmHg",
+   "cite": "fits/m1/Model_7/ude_cs.jl:167"
+  },
+  {
+   "what": "M1-vs-M7 comparison decks: if the two models used different Rss, differences credited to the NN compliance would be confounded",
+   "cite": "jugular_compression_m1_vs_m7_p137"
+  },
+  {
+   "what": "The M1 reference this is anchored to, where the same default is taken implicitly rather than written out",
+   "cite": "Model_1/run_jc_patients.jl:230"
+  },
+  {
+   "what": "Jugular-compression response, since Rss sits in the same outflow path as the IJV tube parameters set just below",
+   "cite": "fits/m1/Model_7/ude_cs.jl:170"
+  }
+ ],
+ "expectation": "Against the cascade value, this choice lowers rest ICP by about 4.6 mmHg in the one documented case (137: 12.5 → 7.9). Whether that sign and size carry to other patients, or to pulse amplitudes, is unknown from this context.",
+ "check": {
+  "command": "julia --project=. Model_1/replot_deck.jl jugular_compression_m1_vs_m7_p137",
+  "why": "Replots the one deck where M7 is compared to M1 for patient 137, the case the comment quotes rest-ICP numbers for. Cheaper than a re-fit and shows whether rest ICP and the M1/M7 offset still look like the fitted baseline."
+ },
+ "confidence": "medium"
+}

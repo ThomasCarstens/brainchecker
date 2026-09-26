@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:13:49",
+ "cost_usd": 0.03849765,
+ "prompt_version": "note-v1",
+ "meaning": "Spinal compliance is the Marmarou-style stock law multiplied by a neural-network factor bounded to exp(±log 100) via tanh, i.e. between 0.01x and 100x the baseline law. Inputs are hand-scaled transmural pressure ((ptm-8)/6) and, in the full law, jugular pressure ((j-25)/20).",
+ "could_move": [
+  {
+   "what": "CS_RMAX = 100 sets how far the NN can leave the stock law; the comment says trajectories only used 0.15x to 70x, so the bound is loose and the fitted spinal buffering can swing two orders of magnitude.",
+   "cite": "fits/m1/Model_7/ude_cs.jl:266"
+  },
+  {
+   "what": "The hand-picked input scalings (ptm offset 8, span 6; j offset 25, span 20) decide where the NN is sensitive; patients whose Ptm or P_j sit outside those ranges get a near-saturated tanh and hence a near-constant factor.",
+   "cite": "fits/m1/Model_7/ude_cs.jl:270"
+  },
+  {
+   "what": "Law :A drops the jugular input (passes zero), so any jugular-compression response in it comes only from pressure, not from P_j directly — this changes the pulse-amplitude fit for the compression decks.",
+   "cite": "fits/m1/Model_7/ude_cs.jl:275"
+  },
+  {
+   "what": "The stock floor max(ptm - p0s, 0.05) caps compliance from above when Psp approaches Pabdo + p0s; near that point the NN factor multiplies an already clamped value.",
+   "cite": "fits/m1/Model_7/ude_cs.jl:267"
+  },
+  {
+   "what": "All three jugular-compression decks are fitted through this same law, so the bound and scalings are shared across patients 081, 083 and 137.",
+   "cite": "jugular_compression_m1_vs_m7_p081"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: tightening CS_RMAX or shifting the input scalings will restrict spinal buffering and should reduce the fitted pulse-amplitude flexibility; whether M3 improves or worsens cannot be told from this context.",
+ "check": {
+  "command": "julia --project=. fits/m1/Model_7/ude_cs.jl --deck jugular_compression_m1_vs_m7_p081 --replot",
+  "why": "Re-runs one patient deck through the same entry point and replots, so the range of the NN factor and the pulse amplitudes can be inspected without refitting all three decks. Flag names may differ — confirm the script's CLI before running."
+ },
+ "confidence": "low"
+}

@@ -1,0 +1,37 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:16:21",
+ "cost_usd": 0.057557950000000004,
+ "prompt_version": "note-v1",
+ "meaning": "These connect statements set the venous-return topology below the vertebral venous system: the hydrostatic block Hs_Rvvs feeds both the transverse path (Rt) and the epidural path (Hs_Revp), the internal/external vertebral plexus resistances rejoin at the azygos branch, and the loop closes back onto the systemic Rsys/Csys node. It fixes which collateral routes carry flow when jugular outflow is impeded, and where gravity columns sit.",
+ "could_move": [
+  {
+   "what": "Flow split between jugular and vertebral/epidural collaterals during jugular compression",
+   "cite": "Model_1/Model.jl:527"
+  },
+  {
+   "what": "All jugular-compression patient comparison decks",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Postural and hydrostatic-height sweeps, since the Hs_ blocks sit on these branches",
+   "cite": "m1_postural_changes_h_Pext_sweep"
+  },
+  {
+   "what": "Abdominal pressure ramp/sine responses that load the epidural-azygos route",
+   "cite": "m1_pabdo_ramp_h_Pabdo_sweep"
+  },
+  {
+   "what": "Fitted parameter values, because the fit sees a different network",
+   "cite": "Model_1/fit.jl"
+  }
+ ],
+ "expectation": "Unknown in sign and size. A topology edit here can change collateral flow split and downstream pressures a lot, and can also change whether the system assembles or solves at all. I cannot tell from this context.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl",
+  "why": "Re-solves a single fitted case against stored targets, so an assembly error or a shifted residual shows up without paying for a full re-fit."
+ },
+ "confidence": "medium",
+ "dropped_uncited": 1
+}

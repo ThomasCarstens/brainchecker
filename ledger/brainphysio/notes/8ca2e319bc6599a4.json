@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:27:01",
+ "cost_usd": 0.06819235,
+ "prompt_version": "note-v1",
+ "meaning": "This registry row binds the run id :m1vpp to model m1 with pulsatility on and a VP shunt, plus its legend label and line colour. It is an identity and presentation binding, not a physics parameter.",
+ "could_move": [
+  {
+   "what": "Legend text and curve colour for the M1 pulsatile + VP case in any figure that selects :m1vpp",
+   "cite": "plotter/registry.jl:171"
+  },
+  {
+   "what": "Which model/pulsatility/shunt combination is solved when a caller asks for :m1vpp, so the plotted curve could change if the flags are edited",
+   "cite": "Model_1/main.jl:100"
+  },
+  {
+   "what": "Colour and label lookup inside the shared plotting path used by decks",
+   "cite": "plotter/plotting.jl:466"
+  },
+  {
+   "what": "Figures in the CIS report family that draw M1 shunt comparisons",
+   "cite": "jugular_compression_m1_vs_p081"
+  }
+ ],
+ "expectation": "If only the label or colour changes, curves stay identical and only figure cosmetics move. If the model, pulsatility or shunt flag changes, the solved trajectory changes and the size is unknown. I cannot tell from this context which callers pass :m1vpp, so I cannot call any edit here safe.",
+ "check": {
+  "command": "grep -rn \"m1vpp\" --include=*.jl .",
+  "why": "Lists every caller of this run id before any replot, so you know whether the row feeds real figures or is unused. Far cheaper than a re-fit."
+ },
+ "confidence": "low"
+}

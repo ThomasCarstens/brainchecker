@@ -1,0 +1,25 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:15:13",
+ "cost_usd": 0.056583949999999994,
+ "prompt_version": "note-v1",
+ "meaning": "P_STAGES sets the applied external pressure ramp as three stages, converting mmHg to dyn/cm² with the factor 1330 and peaking at P_PEAK_MMHG (8.0 mmHg unless _RAMP_AMP overrides it). It is the amplitude of the jugular-compression / pressure-ramp stimulus.",
+ "could_move": [
+  {
+   "what": "Parameters that read the protocol constants per model, so the forcing seen by m1/m3/m5",
+   "cite": "Model_1/Params.jl:204"
+  },
+  {
+   "what": "Patient-fit results, since fitted parameters absorb any change in stimulus amplitude",
+   "cite": "Model_3/run_jc_patients.jl:69"
+  }
+ ],
+ "expectation": "8 mmHg peak is about 10640 dyn/cm². For small perturbations the response should scale roughly linearly with the peak, but this repo has bistability scripts, so near a threshold the change may be abrupt instead. The 1330 factor is a unit conversion, not a free choice.",
+ "check": {
+  "command": "_RAMP_AMP=8.0 julia --project=. Model_1/replot_deck.jl jugular_compression_m5_vs_data",
+  "why": "Replots one deck at the stated amplitude without a re-fit, so the stimulus size and its response are visible in one cheap run."
+ },
+ "confidence": "medium",
+ "dropped_uncited": 2
+}

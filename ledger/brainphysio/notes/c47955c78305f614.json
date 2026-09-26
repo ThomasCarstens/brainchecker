@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:13:30",
+ "cost_usd": 0.0351432,
+ "prompt_version": "note-v1",
+ "meaning": "Ca is no longer picked from a fixed grid: the search walks outward from M3's default by CA_STEP until it brackets the measured pulse amplitude, then bisects in log space (geometric midpoint), because Ca varies over decades. Non-bracketing is reported as a genuine \"no compliance reproduces this amplitude\" outcome rather than being silently rounded to a grid edge.",
+ "could_move": [
+  {
+   "what": "Fitted Ca_v for patient 083 changes: the header value 2.2556e-5 with 11.882 mmHg stage-B error was a grid edge, so bisection should either lower that error or report failure to bracket instead.",
+   "cite": "fits/m3/Model_5/fit.jl:938"
+  },
+  {
+   "what": "Amplitude-based plots and any M5 pulse traces shift for every M5 deck, since Ca sets the amplitude being matched.",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model comparisons against M1 and M4 move, because only the M5 side is refitted.",
+   "cite": "jugular_compression_m1_vs_m5_p083"
+  }
+ ],
+ "expectation": "For 083 the recorded 11.882 mmHg stage-B error should drop substantially, or the case should be declared non-bracketing. Direction for 081, 137, 150 is unknown from this context. CA_STEP and the bracket limit now decide how far out the walk goes, so results depend on them.",
+ "check": {
+  "command": "julia --project=. verify_fit.jl fits/m3/Model_5/fit.jl 083",
+  "why": "Re-solves the single patient whose Ca was a grid edge and reports the stage-B amplitude error, so the bracket-and-bisect result can be compared to the 11.882 mmHg in the header without refitting the whole cohort."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

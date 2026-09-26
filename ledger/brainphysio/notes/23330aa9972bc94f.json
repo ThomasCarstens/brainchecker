@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:20:32",
+ "cost_usd": 0.05770695000000001,
+ "prompt_version": "note-v1",
+ "meaning": "In the verification pulse-amplitude table, a missing amplitude is printed as \"n/a\" and any value is rounded to 3 decimals. It is a display-only formatter inside the printout, not part of the fit objective.",
+ "could_move": [
+  {
+   "what": "The printed amplitude table: digits shown, and beats with no computed amplitude shown as \"n/a\" instead of a number",
+   "cite": "Model_1/verify_fit.jl:290"
+  },
+  {
+   "what": "Whether an \"n/a\" hides a genuinely failed amplitude call (no detected beats in that window) rather than a benign gap; the table cannot distinguish the two",
+   "cite": "Model_1/verify_fit.jl:287"
+  },
+  {
+   "what": "Reading of the limit-cycle vs old-seed baseline gap, which is the stated purpose of this table",
+   "cite": "Model_1/verify_fit.jl:293"
+  },
+  {
+   "what": "Amplitude panels in patient decks using the same routine could disagree with the table's rounding",
+   "cite": "jugular_compression_m1_vs_p081"
+  }
+ ],
+ "expectation": "Unknown in magnitude. Most likely no effect on fitted parameters, since this sits in a println path; the visible effect is the printed digits and the placeholder. I cannot rule out from this context that the same formatting is reused elsewhere.",
+ "check": {
+  "command": "grep -rn \"pulse_amp_median_m1\\|n/a\" Model_1/verify_fit.jl Model_1/fit.jl Model_1/Data.jl",
+  "why": "Lists every caller of the amplitude routine and every other \"n/a\" placeholder, so you can see whether this formatting is display-only or feeds something else, without re-running a fit."
+ },
+ "confidence": "low"
+}

@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:22:08",
+ "cost_usd": 0.0481109,
+ "prompt_version": "note-v1",
+ "meaning": "Line 357 builds an uncompiled copy of the same assembly only to read its unknown list, beside the compiled system on line 360. It fixes what counts as a state variable name for anything downstream that consumes vars_raw.",
+ "could_move": [
+  {
+   "what": "Any m5 fit run, since the model is assembled through this call",
+   "cite": "fits/m3/Model_5/fit.jl"
+  },
+  {
+   "what": "Replotted traces if plotting resolves variables by name from vars_raw",
+   "cite": "fits/m3/Model_5/replot_deck.jl"
+  },
+  {
+   "what": "Fit verification output for m5",
+   "cite": "fits/m3/Model_5/verify_fit.jl"
+  },
+  {
+   "what": "Comparison of m5 against patient data",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model decks that include m5",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  }
+ ],
+ "expectation": "Unknown. The uncompiled system at 357 does not itself enter the solve, so any effect depends on how vars_raw is used later; the element sort at line 355 can also change variable ordering. I cannot tell from this context whether solved trajectories move.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-runs the existing m5 verification on one model instead of a full re-fit, so a change in assembly or variable naming surfaces quickly."
+ },
+ "confidence": "low"
+}

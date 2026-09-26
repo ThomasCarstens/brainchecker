@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:20:52",
+ "cost_usd": 0.0528999,
+ "prompt_version": "note-v1",
+ "meaning": "CS_RMAX=100 bounds the neural compliance multiplier through exp(log(CS_RMAX)·tanh(z)), so learned spinal compliance can range from 1/100x to 100x the per-patient M1-fitted value. The comment justifies 100 by citing an earlier unconstrained run that reached 0.15x to 70x of Marmarou.",
+ "expectation": "The bound sets how far training can move from the M1 starting point. A tighter CS_RMAX keeps M7 closer to M1 (higher loss, more physiological); 100 admits near-degenerate compliance. Magnitude unknown from this context.",
+ "could_move": [
+  {
+   "what": "Fitted compliance trajectories and loss, since nn_factor is the only path from the network into spinal compliance",
+   "cite": "fits/m1/Model_7/ude_cs.jl:268"
+  },
+  {
+   "what": "M1-vs-M7 comparison figures for patient 081, whose M7 curve comes from this bounded law",
+   "cite": "jugular_compression_m1_vs_m7_p081"
+  },
+  {
+   "what": "Same comparison for patient 083",
+   "cite": "jugular_compression_m1_vs_m7_p083"
+  },
+  {
+   "what": "Same comparison for patient 137",
+   "cite": "jugular_compression_m1_vs_m7_p137"
+  }
+ ],
+ "check": {
+  "command": "grep -rn \"CS_RMAX\\|0\\.15\\|70x\\|0\\.224\" fits/m1/Model_7/ude_cs.jl",
+  "why": "Shows every use of the bound and whether the cited 0.15x-70x and 0.224 numbers are recorded anywhere in the file, before paying for a re-fit."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

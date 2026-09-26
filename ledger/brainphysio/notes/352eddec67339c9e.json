@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:19:19",
+ "cost_usd": 0.055945,
+ "prompt_version": "note-v1",
+ "meaning": "Line 376 shapes the third tilt stage with a quintic smoothstep of normalised time, so the tilt angle leaves and reaches its plateaus with zero velocity and acceleration. This choice, plus the shared `duration`, sets how fast the postural change is imposed on the model.",
+ "could_move": [
+  {
+   "what": "Shape and speed of the third tilt step, hence the transient in angle-driven hydrostatic pressures",
+   "cite": "Model_3_celia/Elements.jl:376"
+  },
+  {
+   "what": "Whether the third stage settles in the same basin, since the approach speed to the new state changes",
+   "cite": "Model_3/bistability_confirm_third.jl"
+  },
+  {
+   "what": "Dynamic postural trajectories and the basins exported for figures",
+   "cite": "Model_3/bistability_dynamic_postural.jl"
+  },
+  {
+   "what": "Postural h-sweep figures fed to the CIS report, downstream of the same ramp code",
+   "cite": "m1_postural_changes_h_Pabdo_sweep"
+  },
+  {
+   "what": "Fitted parameters for patient decks if a fit window spans a tilt transition",
+   "cite": "Model_1/fit.jl"
+  }
+ ],
+ "expectation": "Compared with a linear ramp of the same duration, the smoothstep removes the kink in the angle rate, so peak transients should be smaller and smoother. The size is unknown from the code alone; it depends on `duration` against the system time constants, which is not visible here.",
+ "check": {
+  "command": "julia --project=. Model_3/bistability_confirm_third.jl",
+  "why": "Runs the single third-stage case that exercises this ramp, without redoing any fit."
+ },
+ "confidence": "low"
+}

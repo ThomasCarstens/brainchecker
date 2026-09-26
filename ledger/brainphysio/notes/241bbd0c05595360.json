@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:23:04",
+ "cost_usd": 0.054443000000000005,
+ "prompt_version": "note-v1",
+ "meaning": "The README claims M1 and M5 share a line-for-line identical compliance cascade, that α_v defaults to 0.3, and that it is pinned at 0.3 in all four M5 fits on disk. It is a prose claim about defaults and past fit configuration, not executable code.",
+ "could_move": [
+  {
+   "what": "If α_v is in fact freed rather than pinned, fitted compliance splits change and the M1-vs-M5 comparison decks are reinterpreted",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "The same claim underwrites how the M5-vs-data plots are read, since it asserts all four on-disk fits share one α_v",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "The cited line ranges (Params.jl 239–245 vs 287–293) can drift as those files change, making the 'line for line identical' claim silently false",
+   "cite": "fits/m3/Model_5/fits/README.md:186"
+  }
+ ],
+ "expectation": "Unknown. If the claim holds, no numerics move — the text is descriptive. If α_v is not 0.3 in all four fits, or the cascades have diverged, the stated M1/M5 equivalence and the \"difference is purely topological\" conclusion are wrong. I cannot tell which from the context given.",
+ "check": {
+  "command": "grep -rn \"α_v\" fits/m3/Model_1/Params.jl fits/m3/Model_5/Params.jl fits/m3/Model_5/fits/",
+  "why": "Cheaply tests the two load-bearing claims: that α_v defaults to 0.3 in both models' Params.jl, and that no fit config under Model_5/fits frees or overrides it. No solve or re-fit needed."
+ },
+ "confidence": "low"
+}

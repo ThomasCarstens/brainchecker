@@ -1,0 +1,48 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:20:51",
+ "cost_usd": 0.0462076,
+ "prompt_version": "note-v1",
+ "meaning": "MEAN_WINDOW_S = 10 declares that the data were averaged over a 10 s window on the 1 Hz grid, matching what scripts/prep_jugular_data.py applied. It is the smoothing width the fit scores against and the width quoted in panel titles.",
+ "could_move": [
+  {
+   "what": "Scored residuals in the m5 fit, since the same window constant is used where the fit compares model to data",
+   "cite": "fits/m3/Model_5/fit.jl:349"
+  },
+  {
+   "what": "A second use inside the m5 fit path, so a change would move both sites together",
+   "cite": "fits/m3/Model_5/fit.jl:438"
+  },
+  {
+   "what": "Data panel curves and the window quoted in their titles",
+   "cite": "plotter/panels_data.jl:194"
+  },
+  {
+   "what": "Second panel site, same risk of title/curve disagreement",
+   "cite": "plotter/panels_data.jl:226"
+  },
+  {
+   "what": "The m1 copy of this constant; if only one is edited, m1 and m5 are scored on different smoothing",
+   "cite": "Model_1/Data.jl:153"
+  },
+  {
+   "what": "Patient decks that overlay m5 against recordings",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Model-vs-model comparison decks, where an asymmetric edit would bias the comparison",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Numbers written into the fitting write-up",
+   "cite": "fits/m3/Model_5/fit_cheatsheet.md:202"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: a wider window smooths peaks and troughs further, so amplitude-sensitive residuals shrink and fitted amplitudes can drift; a narrower one does the reverse. Whether the preprocessing script still applies 10 s cannot be told from this context.",
+ "check": {
+  "command": "julia --project fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-scores the stored m5 fit against the data grid without re-fitting, so any mismatch between this window and the preprocessing shows up in the residuals."
+ },
+ "confidence": "low"
+}

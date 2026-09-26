@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:27:29",
+ "cost_usd": 0.05936245,
+ "prompt_version": "note-v1",
+ "meaning": "The export script does not hardcode fit bounds: it parses FIT_LO/FIT_HI out of fit.jl and marks a parameter \"pinned at its bound\" with the same 0.98 ratio test fit.jl:1004 uses. The intent is that widening the box in fit.jl cannot leave the table asserting a stale flag.",
+ "could_move": [
+  {
+   "what": "The 0.98 ratio threshold is the one number not parsed from fit.jl. If fit.jl:1004 changes its ratio, the pinned flags silently disagree with the fitter.",
+   "cite": "hack/export_volumes_patients.py:129"
+  },
+  {
+   "what": "The parse depends on fit.jl's layout for FIT_LO/FIT_HI. A rename or reformat there could make the parse fail or return wrong bounds, changing every pinned mark in the table.",
+   "cite": "hack/export_volumes_patients.py:128"
+  },
+  {
+   "what": "Ca_v has no FIT_LO/FIT_HI and is flagged by a separate rule, so its flag is not comparable to the six stage-A rows.",
+   "cite": "hack/export_volumes_patients.py:132"
+  },
+  {
+   "what": "The table mixes fits from different dates (081 from 2026-08-18, three re-run 2026-09-05). Flags are computed against today's bounds, not the bounds each fit ran under.",
+   "cite": "hack/export_volumes_patients.py:123"
+  }
+ ],
+ "expectation": "No effect on any solve or fitted value. It only changes the pinned-at-bound column and the printed ranges in the exported table. Size unknown from the context; it depends on how close the stored estimates sit to the current bounds.",
+ "check": {
+  "command": "python hack/export_volumes_patients.py",
+  "why": "Re-runs only the export, re-parsing FIT_LO/FIT_HI from fit.jl, so it shows whether the parse still works and which parameters come out pinned, without re-fitting. The reach trace found no references, so nothing else exercises this path; inspect what the script writes before running it."
+ },
+ "confidence": "low"
+}

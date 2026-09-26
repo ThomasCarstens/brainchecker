@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:22:17",
+ "cost_usd": 0.0556836,
+ "prompt_version": "note-v1",
+ "meaning": "Line 64 sets the vessel wall constitutive law: transmural pressure (in.p - ext.p) follows a two-exponent law k*((A/A0)^b1 - (A/A0)^(-b2)) in area. It defines how the collapsible segment's area responds to pressure, which feeds resistance (line 65), volume (line 66) and the wall flow ext.q (line 67).",
+ "could_move": [
+  {
+   "what": "Fitted parameter values for m5 (k, b1, b2, A0 and anything compensating through R and V)",
+   "cite": "fits/m3/Model_5/fit.jl"
+  },
+  {
+   "what": "Model-vs-data agreement in the single-model patient comparison",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model comparison plots against m1, m4 and m6, since only the m5 branch changes",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Reported curves and numbers in the fitting report for the patient decks",
+   "cite": "jugular_compression_m5_vs_p137"
+  },
+  {
+   "what": "Solver behaviour: the (A/A0)^(-b2) term grows without bound as A approaches zero, so collapse cases may stiffen or fail",
+   "cite": "fits/m3/Model_5/Elements.jl:64"
+  }
+ ],
+ "expectation": "Unknown. The law is strongly nonlinear in A, and through R ~ 1/A^2 (line 65) a small change in the exponents can shift both operating area and pressure drop. I cannot tell direction or size from this context.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_5/verify_fit.jl",
+  "why": "Runs the existing verification for this model only, so it re-solves and checks a fit without paying for a full re-fit across all 12 decks."
+ },
+ "confidence": "low"
+}

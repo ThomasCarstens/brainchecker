@@ -1,0 +1,40 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:19:42",
+ "cost_usd": 0.03411655,
+ "prompt_version": "note-v1",
+ "meaning": "Line 253 splits the post-hydrostatic vertebral venous flow into two parallel return routes: through Rt and through the epidural branch (Hs_Revp -> Rivp/Revp -> Razy) that is loaded by abdominal pressure. It sets which resistances share the vertebral venous outflow and where posture-dependent hydrostatic columns enter the venous circuit.",
+ "could_move": [
+  {
+   "what": "Steady-state venous pressure and flow split between the transverse/Rt path and the epidural-azygos path, hence baseline operating point of model m3",
+   "cite": "Model_3_celia/Model.jl:253"
+  },
+  {
+   "what": "Posture responses, since this junction feeds Hs_Revp and the abdominal-pressure-loaded branch at line 258",
+   "cite": "Model_3_celia/Model.jl:258"
+  },
+  {
+   "what": "Postural deck outputs",
+   "cite": "postural_changes_m3_analysis"
+  },
+  {
+   "what": "Steady-state deck outputs",
+   "cite": "steady_state_m3_analysis"
+  },
+  {
+   "what": "Cross-model comparison, where m3 is compared against m4",
+   "cite": "postural_changes_m3_vs_m4"
+  },
+  {
+   "what": "Bistability results, which depend on the venous return topology and could gain or lose basins",
+   "cite": "Model_3_celia/bistability_confirm_plot.jl"
+  }
+ ],
+ "expectation": "Unknown in size. Direction is not inferable from the context: adding or removing a parallel branch at this node changes total venous resistance, but I cannot tell the sign of the pressure shift without parameter values. Bistability is sensitive to topology, so effects may be qualitative rather than small.",
+ "check": {
+  "command": "julia --project=. Model_3_celia/replot_deck.jl steady_state_m3_analysis",
+  "why": "Re-renders the steady-state m3 deck from a single solve instead of a full fit, so the baseline venous pressures and flow split can be compared against the previous figures."
+ },
+ "confidence": "low"
+}

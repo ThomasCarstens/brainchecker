@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:23:04",
+ "cost_usd": 0.0554342,
+ "prompt_version": "note-v1",
+ "meaning": "The comment records that seeding the overlay run from a converged limit cycle, rather than the flat-Pa fixed point, moves baseline mean ICP from 8.406 to 8.181 mmHg and AMP from 2.314 to 1.872 at patient 081's fitted parameters. It justifies solving both runs so a regression shows up as a number.",
+ "could_move": [
+  {
+   "what": "The three quoted numbers are tied to 081's fitted parameters; a refit of 081 makes them stale with no code change.",
+   "cite": "fits/m3/Model_5/verify_fit.jl:136"
+  },
+  {
+   "what": "Setting _M5_LIMIT_CYCLE=0 reverts to the flat-Pa seed, shifting the overlay baseline and amplitude as tabulated.",
+   "cite": "fits/m3/Model_5/verify_fit.jl:145"
+  },
+  {
+   "what": "Other patient overlays use the same seeding path, so their baselines move too, by amounts not measured here.",
+   "cite": "jugular_compression_m5_vs_p083"
+  },
+  {
+   "what": "Cross-model decks compare the reseeded m5 curve against other models, so the apparent model gap changes.",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  }
+ ],
+ "expectation": "For 081: baseline mean ICP drops about 0.22 mmHg (8.406 to 8.181) and AMP drops about 19% (2.314 to 1.872). Direction and size for other patients is unknown.",
+ "check": {
+  "command": "julia --project fits/m3/Model_5/verify_fit.jl",
+  "why": "This script solves both the seeded and the non-pulsatile run and prints the baseline numbers, so it rechecks 8.181 / 1.872 / 8.165 without a refit."
+ },
+ "confidence": "low"
+}

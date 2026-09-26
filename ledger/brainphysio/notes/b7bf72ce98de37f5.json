@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:12:19",
+ "cost_usd": 0.07570220000000001,
+ "prompt_version": "note-v1",
+ "meaning": "`tol = 1.3e-5` is the relative cycle-to-cycle change at which a simulation is declared periodically steady. It decides how many cardiac cycles are run before the state is accepted as the steady solution.",
+ "could_move": [
+  {
+   "what": "The accepted steady state itself for every m3 run, since the loop returns as soon as Δ falls under tol (Model_3/Model.jl:22).",
+   "cite": "Model_3/Model.jl:16"
+  },
+  {
+   "what": "Bistability results: whether two initial conditions are judged to land on distinct basins can depend on how tightly each is converged.",
+   "cite": "Model_3/bistability_test.jl:127"
+  },
+  {
+   "what": "Fitted parameters and target search in m3/m6, since the objective is evaluated on the returned steady state.",
+   "cite": "fits/m3/Model_6/target_search.jl:104"
+  },
+  {
+   "what": "Plotted traces in the jugular-compression decks that go through the same solver path.",
+   "cite": "plotter/plot_runs.jl:893"
+  }
+ ],
+ "expectation": "Direction unknown from the context alone. A looser tol returns earlier and leaves more residual drift; a tighter tol costs more cycles and can hit max_cycles = 4096. I cannot tell from the code whether 1.3e-5 is loose or tight for these models.",
+ "check": {
+  "command": "julia --project=. Model_3/bistability_test.jl",
+  "why": "Runs one m3 case that calls solve_to_periodic_steady_state directly (Model_3/bistability_test.jl:127-132) and reports basin outcomes, without re-fitting. Compare the returned states and cycle counts against the current tol and a tighter one."
+ },
+ "confidence": "low"
+}

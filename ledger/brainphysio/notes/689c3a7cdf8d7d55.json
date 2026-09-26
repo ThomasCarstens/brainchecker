@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:24:11",
+ "cost_usd": 0.0306565,
+ "prompt_version": "note-v1",
+ "meaning": "Detection of the jugular \"créneau\" (step plateau) requires at least one supra-threshold run longer than 20 s on the 10 s smoothed trace; if none is found the preparation aborts instead of falling back. The threshold is fixed at halfway between baseline and the signal maximum.",
+ "could_move": [
+  {
+   "what": "The 20 s minimum duration: recordings with a shorter or interrupted plateau raise instead of yielding a window, so those patients silently drop out of the fitted set.",
+   "cite": "scripts/prep_jugular_data.py:147"
+  },
+  {
+   "what": "The 50% of (max - baseline) threshold uses nanmax, so a single spike or artefact raises thr and can shrink or erase the detected segment.",
+   "cite": "scripts/prep_jugular_data.py:143"
+  },
+  {
+   "what": "Only the longest segment is kept; if the step is split by a dropout, the retained window is a fragment and the later 1 s edge refinement starts from the wrong edges.",
+   "cite": "scripts/prep_jugular_data.py:150"
+  }
+ ],
+ "expectation": "Unknown. It changes which recordings enter the fit and the window boundaries, not the model equations. Whether any current patient sits near the 20 s or 50% boundary cannot be told from this context.",
+ "check": {
+  "command": "python scripts/prep_jugular_data.py 2>&1 | tail -40",
+  "why": "Runs the preparation only and shows whether any recording hits the RuntimeError or produces a suspiciously short window, without re-fitting."
+ },
+ "confidence": "low"
+}

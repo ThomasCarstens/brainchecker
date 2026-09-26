@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:12:19",
+ "cost_usd": 0.03408735,
+ "prompt_version": "note-v1",
+ "meaning": "The dynamic external pressure input is built as a staircase of three levels whose transitions are smoothed by a quintic smoothstep over a fixed duration `dur`. This makes P_ext continuous with zero first and second derivative at each step edge, instead of a jump.",
+ "could_move": [
+  {
+   "what": "Shape and timing of every jugular-compression onset/release transient, since the deck drives P_ext through this function",
+   "cite": "Model_1/Model.jl:825"
+  },
+  {
+   "what": "Stiffness of the ODE and thus solver step choice; a softened edge changes what dtmax is adequate",
+   "cite": "Model_1/dtmax_sweep.jl"
+  },
+  {
+   "what": "Fitted parameter values, because the fit sees the smoothed ramp rather than the recorded pressure edge",
+   "cite": "Model_1/fit.jl"
+  },
+  {
+   "what": "The h-sweep families over P_ext, where the transition width interacts with the swept amplitude",
+   "cite": "m1_jugular_compression_h_Pext_sweep"
+  }
+ ],
+ "expectation": "Peaks and slopes during each transition are reduced and delayed relative to a step input; the effect grows with `dur` and should vanish as `dur` goes to zero. Steady levels between transitions should be unaffected. Magnitude unknown from the code alone.",
+ "check": {
+  "command": "julia --project Model_1/verify_fit.jl",
+  "why": "Re-runs one fitted case without a full re-fit, so the transient shape and residuals under the current smoothstep can be inspected directly."
+ },
+ "confidence": "medium",
+ "dropped_uncited": 1
+}

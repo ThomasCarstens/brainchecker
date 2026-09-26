@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:23:43",
+ "cost_usd": 0.04572795,
+ "prompt_version": "note-v1",
+ "meaning": "Sets the VA shunt valve resistance in Model_6 to 1.4e6, the same value as Model_1, so a fixed one-way drain from CSF to central vein whenever ICP exceeds Pcv. Because ResistorValve has no opening pressure, this number alone sets how fast CSF leaves once the gradient is positive.",
+ "could_move": [
+  {
+   "what": "Shunt flow and CSF volume in any m3/m6 run with shunt = :va; the comment at Params.jl:138 records a case where CSF dural volume went negative while pressures looked settled, so this value can push volumes out of physical range",
+   "cite": "fits/m3/Model_6/Params.jl:144"
+  },
+  {
+   "what": "M1-vs-M3 shunt comparisons lose their like-for-like framing if this diverges from the Model_1 value",
+   "cite": "Model_1/Params.jl:128"
+  },
+  {
+   "what": "Shunt-element equations that consume the parameter",
+   "cite": "Model_3/Model.jl:218"
+  },
+  {
+   "what": "Posture-related decks, since the VA drainage gradient depends on Pcv and thus on posture",
+   "cite": "m1_postural_changes_h_Pabdo_sweep"
+  }
+ ],
+ "expectation": "Lower Rva_shunt_v means more drainage, lower ICP and faster CSF volume loss; higher means less. Whether 1.4e6 keeps CSF dural volume non-negative in Model_6 is not something I can tell from the context.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_6/verify_fit.jl",
+  "why": "Runs a single verification solve rather than a re-fit; inspect CSF dural volume and shunt flow for negative or drifting values."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

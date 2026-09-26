@@ -1,0 +1,25 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:14:44",
+ "cost_usd": 0.04889824999999999,
+ "prompt_version": "note-v1",
+ "meaning": "The TCD panel draws measured velocities (cm/s) and the model's cerebral inflow brain.in.q (mL/s) on two separate axes, with no score computed. It lets a reader compare waveform shape during compression while refusing to assert a velocity-to-flow proportionality nobody measured.",
+ "could_move": [
+  {
+   "what": "Every TCD panel in the jugular-compression figure set: the right-axis scaling of brain.in.q decides how well inflow appears to track velocity, so visual agreement is an axis choice, not a fit.",
+   "cite": "plotter/panels_data.jl:481"
+  },
+  {
+   "what": "With no score emitted here, TCD shape mismatch cannot penalise a deck; decks are ranked on other panels only.",
+   "cite": "jugular_compression_m5_vs_data"
+  }
+ ],
+ "expectation": "No effect on fitted parameters or scores, since this panel is display-only in this file. The effect on reader interpretation is real but unquantified. I cannot tell whether TCD is scored elsewhere: the reach trace found no references.",
+ "check": {
+  "command": "julia --project=. plotter/panels_data.jl jugular_compression_m5_vs_data",
+  "why": "Replots one deck that carries measured data, so the TCD twin-axis panel can be inspected without a re-fit."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

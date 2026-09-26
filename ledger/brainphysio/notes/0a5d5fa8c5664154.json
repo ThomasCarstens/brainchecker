@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:18:55",
+ "cost_usd": 0.07726765,
+ "prompt_version": "note-v1",
+ "meaning": "Line 516 shapes the second manoeuvre transition with a quintic smoothstep (6x^5-15x^4+10x^3) of the clamped ramp fraction, so the driven quantity starts and ends with zero slope. It sets how abruptly the second onset is applied over `duration`.",
+ "could_move": [
+  {
+   "what": "Second-onset transient shape in the jugular compression comparison against patient data; a different smoothing changes peak rate of change and the fitted response.",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "The same smoothstep is repeated for transitions 1 and 3, so the profile must stay consistent across all three onsets in this element.",
+   "cite": "Model_1_celia/Elements.jl:520"
+  },
+  {
+   "what": "Stiff-solver step behaviour: a less smooth onset can change the dtmax needed near the transition.",
+   "cite": "Model_1/dtmax_sweep.jl"
+  },
+  {
+   "what": "h-parameter sweeps built on these drivers could shift, since sweep outputs depend on onset shape.",
+   "cite": "m1_jugular_compression_h_Pext_sweep"
+  },
+  {
+   "what": "The parallel copies in Model_1 and Model_3 would diverge if only the celia copy is edited.",
+   "cite": "Model_1/Elements.jl:516"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: a smoother (higher-order) transition lowers the peak time derivative at onset and delays the effective mid-point; a sharper one raises it. The plateau after `duration` is probably unchanged, but I cannot confirm that from the lines shown.",
+ "check": {
+  "command": "julia --project=. Model_1_celia/main.jl",
+  "why": "Runs the single case that uses this element so you can inspect the second onset transient without a re-fit."
+ },
+ "confidence": "low"
+}

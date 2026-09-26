@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:22",
+ "cost_usd": 0.05381145,
+ "prompt_version": "note-v1",
+ "check": {
+  "command": "julia --project Model_1/replot_deck.jl jugular_compression_m1_vs_p081",
+  "why": "Replots one deck from stored results, no re-fit, and shows whether the 4 pt stamp sits clear of the axis and digits at the default panel size."
+ },
+ "confidence": "low",
+ "meaning": "The comment fixes the stamp font at 4 pt integer, justified by a measurement that a 600x400 panel leaves a ~6 px band that 4 pt fills exactly and 5 pt overflows. It also claims every explicit deck size is larger, so the smallest default panel is the binding case.",
+ "expectation": "Unknown in magnitude. If the 6 px band figure is off, or some deck sets a size below 600x400, the stamp can collide with the axis or the digits on those panels. A non-integer size would silently be read as a rotation and leave 14 pt text.",
+ "could_move": [
+  {
+   "what": "The stamp is on the shared plotting path, so the claim binds all decks, not one.",
+   "cite": "plotter/plot_runs.jl:650"
+  },
+  {
+   "what": "Montage/beat rows stamp at one size and re-render at another; if any re-render target is smaller than 600x400 the 'smallest panel' claim fails.",
+   "cite": "plotter/plot_runs.jl:645"
+  },
+  {
+   "what": "Deck panels that do not set `size` inherit the 600x400 default the measurement was taken against.",
+   "cite": "jugular_compression_m1_vs_p081"
+  }
+ ],
+ "dropped_uncited": 1
+}

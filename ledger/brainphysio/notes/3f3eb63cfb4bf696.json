@@ -1,0 +1,40 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:19:58",
+ "cost_usd": 0.0550449,
+ "prompt_version": "note-v1",
+ "meaning": "Sets the baseline cerebral venous resistance (Rv_v = 811.3 CGS) in the shared brain parameter dictionary. It is the default drainage resistance every brain model inherits before any per-model or per-patient override.",
+ "could_move": [
+  {
+   "what": "Baseline venous pressure/flow and CSF pressure in Model 1 solves, since Params.jl reads this default",
+   "cite": "Model_1/Params.jl:302"
+  },
+  {
+   "what": "Model 3 runs including the bistability studies, which depend on the drainage path",
+   "cite": "Model_3/Params.jl:322"
+  },
+  {
+   "what": "Jugular compression comparisons against patient data, where venous resistance is the quantity being perturbed",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "h-sweep figures in the CIS report if the default is not overridden in the deck",
+   "cite": "m1_jugular_compression_h_Pext_sweep"
+  },
+  {
+   "what": "Fitted parameter sets in fits/m3 that may have been fitted relative to this starting value",
+   "cite": "fits/m3/Model_5/Params.jl:344"
+  },
+  {
+   "what": "Documented parameter tables that quote the value",
+   "cite": "docs/docs/Library/Brain models/Model 1.md:19"
+  }
+ ],
+ "expectation": "Unknown in size. Directionally, raising Rv_v raises venous and intracranial pressure at fixed inflow; lowering it does the opposite. Whether downstream models actually see it depends on per-model overrides, which I cannot confirm from this context.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl",
+  "why": "Single-case verification of a Model 1 fit is much cheaper than a re-fit and shows whether the baseline venous resistance change shifts the fitted solution."
+ },
+ "confidence": "medium"
+}

@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:22:12",
+ "cost_usd": 0.032303250000000006,
+ "prompt_version": "note-v1",
+ "meaning": "After applying a parameter change, the code re-solves the static problem to steady state and throws a hard error if the adaptive steady-state solver does not converge. So any parameter set that fails to settle aborts the run instead of producing a degraded or partially converged initial condition for the dynamic solve.",
+ "could_move": [
+  {
+   "what": "Runs that call this path from the fit driver can die mid-optimisation instead of returning a penalised objective, changing which parameter sets are reachable.",
+   "cite": "fits/m3/Model_5/fit.jl"
+  },
+  {
+   "what": "Verification and replot runs abort on a non-converged case rather than emitting a flagged result.",
+   "cite": "fits/m3/Model_5/verify_fit.jl"
+  },
+  {
+   "what": "The dynamic solve downstream uses u0_ss_new, so the strictness here sets how clean the dynamic initial condition is.",
+   "cite": "fits/m3/Model_5/Model.jl:1782"
+  },
+  {
+   "what": "Jugular compression decks that perturb parameters most are the likeliest to hit the non-steady branch.",
+   "cite": "jugular_compression_m5_vs_data"
+  }
+ ],
+ "expectation": "Unknown. Whether any deck actually trips the error, and how the convergence tolerance inside solve_to_steady_state_adaptive is set, is not visible in the given context.",
+ "check": {
+  "command": "julia --project fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-runs the existing verification path for Model_5 without a full re-fit, so it exercises this steady-state branch and shows whether the error fires."
+ },
+ "confidence": "low"
+}

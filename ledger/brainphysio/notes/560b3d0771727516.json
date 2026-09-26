@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:27:32",
+ "cost_usd": 0.054382349999999996,
+ "prompt_version": "note-v1",
+ "meaning": "The comment states that the baseline mean flow q̄₀ is averaged over a 10 s window ending at BASELINE_T1 = 60 s, and that the volume integral is zeroed at 60 s rather than t = 0, so the start-up transient shows as a dip before the zero point instead of being folded into q̄₀. It also asserts specific onset times and a prior wrong result of -24 mL in M1 and M3.",
+ "expectation": "Unknown in magnitude. Direction: every exported volume series is offset so it reads 0.000 mL at t = 60 s; any error in the window mean flow grows linearly with elapsed time over the rest of the run.",
+ "could_move": [
+  {
+   "what": "The quoted numbers (-24 mL in M1 and M3; onsets 340 s, 80 s, 117 s; ~1 s cardiac cycle) are prose claims, not read from code in this context. If scenario onsets change, the window can overlap a perturbation and stop being a baseline.",
+   "cite": "hack/export_volumes.py:144"
+  },
+  {
+   "what": "Zeroing at BASELINE_T1 instead of t=0 sets the offset of every exported volume series, so downstream plots and any volume-based residual inherit it.",
+   "cite": "hack/export_volumes.py:151"
+  },
+  {
+   "what": "The drift print in main() is the only stated check that the baseline is settled; its threshold and failure behaviour are not visible here.",
+   "cite": "hack/export_volumes.py:154"
+  }
+ ],
+ "check": {
+  "command": "python hack/export_volumes.py",
+  "why": "Re-runs the export and its own drift print from t=60 s to each onset, showing whether the series reads 0.000 at 60 s and whether the window still ends before every onset, without refitting."
+ },
+ "confidence": "low"
+}

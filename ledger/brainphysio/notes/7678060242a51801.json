@@ -1,0 +1,41 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:13:00",
+ "cost_usd": 0.056832900000000006,
+ "prompt_version": "note-v1",
+ "meaning": "The fit target is fixed to the respiration-free 1 Hz mean ICP series (DATA_MEAN, :icp) over the measured window only. Every parameter estimated in this fit is therefore constrained by mean ICP alone, not by pulsatile or out-of-window behaviour.",
+ "could_move": [
+  {
+   "what": "All M5 parameters fitted here flow into the M5 curve compared against data",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model M1 vs M5 comparisons inherit any bias from the mean-only target",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "M4 vs M5 comparison, if M4 was fitted to a different target definition",
+   "cite": "jugular_compression_m4_vs_m5_p083"
+  },
+  {
+   "what": "M5 vs M6 comparison",
+   "cite": "jugular_compression_m5_vs_m6"
+  },
+  {
+   "what": "Patient-level M5 predictions",
+   "cite": "jugular_compression_m5_vs_p150"
+  },
+  {
+   "what": "The dynamic system is exercised only through this mean target, so dynamic-only parameters may be weakly identified",
+   "cite": "fits/m3/Model_5/fit.jl:276"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: parameters acting mainly on pulse amplitude or outside the measured window are likely under-determined, so they can take a wide range of values while mean ICP still matches. I cannot tell from this context which parameters those are.",
+ "check": {
+  "command": "julia --project fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-runs the existing verification stage for the M5 fit without a full re-fit, checking the fitted parameters against the mean-ICP target and its residual diagnostics."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:22:40",
+ "cost_usd": 0.06164800000000001,
+ "prompt_version": "note-v1",
+ "meaning": "The comment claims Rvvs_v is the key fitted parameter because brain.out feeds Rijvs and Rvvs in parallel, so at Rvvs 0.04 mmHg/(mL/s) closing the jugular only diverts flow, giving +0.25 mmHg ICP instead of the patient's +10.24. It justifies fitting Rvvs_v rather than fixing it.",
+ "could_move": [
+  {
+   "what": "The quoted default-case numbers (+0.25 vs +10.24 mmHg, Rijvs.A 1.254 -> 0.191, 85% collapse, Rvvs 0.04) live only in prose; if model defaults or the tube law change, the comment stays as the stated argument while being wrong.",
+   "cite": "fits/m3/Model_5/fit.jl:17"
+  },
+  {
+   "what": "The parallel/series topology claim (Rijvs and Rvvs in parallel off brain.out; Rt and the Rivp/Revp/Razy chain downstream of Rvvs) decides which knob is fitted. If connectivity differs, Rvvs_v absorbs error belonging elsewhere.",
+   "cite": "fits/m3/Model_5/fit.jl:22"
+  },
+  {
+   "what": "P_jc_amp is fitted too and is unrecorded, so the two can trade off; attributing the ICP gap mainly to Rvvs_v may not be identifiable from these recordings.",
+   "cite": "fits/m3/Model_5/fit.jl:28"
+  },
+  {
+   "what": "All twelve jugular_compression decks consume the fitted m5 parameters, so a changed Rvvs_v shifts every M1/M4/M6 vs M5 comparison at once.",
+   "cite": "jugular_compression_m5_vs_data"
+  }
+ ],
+ "expectation": "Direction: a larger Rvvs_v makes the vertebral route costlier, so compression should raise ICP more. Size unknown from this context; the comment implies a factor of ~40 gap unfitted, but I cannot confirm that number or how much of it Rvvs_v alone closes.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-runs the single fitted case and reports the ICP rise under compression, so the quoted numbers and the claimed role of Rvvs_v can be checked against current output without a full re-fit."
+ },
+ "confidence": "low"
+}

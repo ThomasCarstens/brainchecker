@@ -1,0 +1,37 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:15:26",
+ "cost_usd": 0.03491380000000001,
+ "prompt_version": "note-v1",
+ "meaning": "Transmural pressure of this vessel element is defined as the internal pressure minus the external pressure at its `ext` port, so all downstream area/compliance behaviour is driven by that difference rather than by absolute internal pressure. Every external-pressure input (Pext, Pabdo, postural, jugular compression) enters the collapsible-vessel mechanics only through this line.",
+ "could_move": [
+  {
+   "what": "Area, and hence flow resistance and volume, since A is computed from V but V responds to Ptm through the constitutive law in this element",
+   "cite": "Model_1/Elements.jl:241"
+  },
+  {
+   "what": "Mass split between in/out/ext ports, because ext.q is tied to the same external port whose pressure sets Ptm",
+   "cite": "Model_1/Elements.jl:244"
+  },
+  {
+   "what": "All external-pressure sweep decks, whose whole effect is mediated by ext.p",
+   "cite": "m1_jugular_compression_h_Pext_sweep"
+  },
+  {
+   "what": "Abdominal pressure decks, same mediation path",
+   "cite": "m1_pabdo_ramp_h_Pabdo_sweep"
+  },
+  {
+   "what": "Patient-fit comparisons for jugular compression, if Ptm sign or reference changes",
+   "cite": "jugular_compression_m1_vs_p081"
+  }
+ ],
+ "expectation": "Unknown in size. Directionally, any change to this definition (sign, added reference term, or dropping ext.p) shifts collapse onset and thus the amplitude of the response to external-pressure manoeuvres. I cannot tell from this context whether fitted parameters absorb it.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl",
+  "why": "Re-runs the existing fit verification for m1 without a full re-fit, so a changed Ptm definition shows up as a shift in fitted-case residuals before any sweep or replot is trusted."
+ },
+ "confidence": "medium",
+ "dropped_uncited": 1
+}

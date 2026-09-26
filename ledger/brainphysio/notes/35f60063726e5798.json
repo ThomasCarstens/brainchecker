@@ -1,0 +1,40 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:17:29",
+ "cost_usd": 0.05806740000000001,
+ "prompt_version": "note-v1",
+ "meaning": "`N_v = 1` is the default exponent in the vessel resistance-evolution law (dR/dV family) for every element built by this constructor. At 1 the resistance varies with the lowest power of volume the law allows, so any element that does not override it gets the weakest nonlinear resistance response.",
+ "could_move": [
+  {
+   "what": "All elements constructed without an explicit N_v inherit exponent 1, changing R(V) and hence flow/pressure waveforms",
+   "cite": "Model_1_celia/Elements.jl:81"
+  },
+  {
+   "what": "Read together with activate_resistance_evolution; if that flag stays 1 the exponent is live, not inert",
+   "cite": "Model_1_celia/Elements.jl:83"
+  },
+  {
+   "what": "Many downstream element definitions reuse this constructor",
+   "cite": "Model_1/Elements.jl:101"
+  },
+  {
+   "what": "Jugular compression comparison figures across m1/m4/m5",
+   "cite": "jugular_compression_m1_vs_m5_p137"
+  },
+  {
+   "what": "h-sweep and postural decks feeding the CIS report",
+   "cite": "m1_postural_changes_h_Pabdo_sweep"
+  },
+  {
+   "what": "Patient fits, since resistance shape trades off against fitted compliance parameters",
+   "cite": "Model_1/fit.jl"
+  }
+ ],
+ "expectation": "Unknown in magnitude. Direction: a larger N_v makes resistance change more steeply with volume, so compression and collapse responses would sharpen. Whether any element actually relies on this default is not visible in the given context.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl",
+  "why": "Re-verifies one existing fit instead of re-fitting, so a changed default exponent shows up as a mismatch in that single case."
+ },
+ "confidence": "low"
+}

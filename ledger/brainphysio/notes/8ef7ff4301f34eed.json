@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:21:13",
+ "cost_usd": 0.035351099999999996,
+ "prompt_version": "note-v1",
+ "meaning": "The vessel component defaults `activate_resistance_evolution = 1`, so unless a caller overrides it, Poiseuille resistance is allowed to evolve with vessel state rather than staying fixed. It is a default on a component used across many vessels, not a per-case setting.",
+ "could_move": [
+  {
+   "what": "Every vessel instantiated without passing this keyword picks up the evolving-resistance branch, so venous/jugular pressure-flow curves shift",
+   "cite": "fits/m3/Model_5/Elements.jl:148"
+  },
+  {
+   "what": "Jugular compression comparisons against patient data could change shape, since resistance evolution matters most when a vessel is collapsed",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model comparison decks may become unfair if the models differ in whether they override this default",
+   "cite": "jugular_compression_m1_vs_m5_p137"
+  },
+  {
+   "what": "Fitted parameter values in the patient fits may absorb part of this default's effect",
+   "cite": "Model_1/fit.jl"
+  },
+  {
+   "what": "Bistability results may depend on it, as the resistance nonlinearity feeds the multiple-equilibria mechanism",
+   "cite": "Model_3/bistability_confirm_plot.jl"
+  }
+ ],
+ "expectation": "Unknown. The sign and size depend on how the flag is used in the equations below line 148 and on how many call sites override it; I cannot tell from this context.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_1/verify_fit.jl",
+  "why": "Re-solves one fitted case without a full re-fit, so a changed default shows up as a changed residual or trace."
+ },
+ "confidence": "low"
+}

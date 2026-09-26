@@ -1,0 +1,220 @@
+# Brainchecker target: brainphysio_celia.
+#
+# Everything here comes from Thomas's protocol form (26 Sep 2026, targets/brainphysio/
+# form_2026-09-26.json) unless a line says "added". The rules engine reads this file; it
+# holds no model knowledge of its own.
+
+name = "brainphysio"
+repo = "/home/thermistor/Documents/brainphysio_celia"
+plots_dirs = ["modelplots", "output"]        # first that exists holds the decks
+store_dir = "simulations"
+transcripts = "~/.claude/projects/-home-thermistor-Documents-brainphysio-celia"
+# Folders outside the repo that can reuse a claim (reports, notebooks). Read-only.
+claim_dirs = ["~/Documents/seafile/Seafile/Sophysa_models/rapports-de-stage-thomas-2026"]
+# Blame dates on or before this are the pre-AI baseline (10 Aug 2026 provenance audit).
+pre_ai_until = "2026-07-02"
+# Imported untouched from Celia's notebooks (formerly Model_1_raw).
+human_dirs = ["Model_1_celia/"]
+
+[notes]
+# Automatic (Thomas, 26 Sep, reversing "on demand only"): after each commit, every critical
+# decision gets a note in the background, and a review writes notes for its critical rows.
+# Costs are logged per note (ledger/<target>/spend.jsonl). The runs draw on the Claude Code
+# login's allowance (a Pro plan on aperture), so a usage-limit error stops the batch cleanly.
+model = "claude-opus-5"
+effort = "low"
+per_call_budget_usd = 0.50      # passed to claude --max-budget-usd; on a Pro plan it is advisory
+automatic = true
+levels = ["critical"]           # which decisions get automatic notes
+daily_cap_usd = 0               # 0 = no cap; set e.g. 2.0 to stop automatic notes for the day
+concurrency = 3
+
+# Model folder -> registry id (plotter/registry.jl). Model_3 is M4; Model_3_celia is M3.
+[models]
+"Model_1" = "m1"
+"Model_3_celia" = "m3"
+"Model_3" = "m4"
+"fits/m3/Model_5" = "m5"
+"fits/m3/Model_6" = "m6"
+"fits/m1/Model_7" = "m7"
+
+# ---- pillars: first matching glob wins -------------------------------------------------
+[[pillars]]
+name = "report"          # out of audit scope (form: the reports are not audited)
+globs = ["hack/internship-report/**"]
+[[pillars]]
+name = "fitting"
+globs = ["fits/**", "**/fit.jl", "**/Data.jl", "**/verify_fit.jl", "**/valve_diag.jl",
+         "**/limit_cycle.jl", "Model_1/run_jc_patients.jl", "scripts/prep_jugular_data.py",
+         "scripts/fit_patient.sh", "scripts/serve_param_api.py"]
+[[pillars]]
+name = "comparison"
+globs = ["scripts/ursino_*", "**/kmedoids_*", "Model_3/run_jc_patients.jl", "Model_3/run_jc_081.jl",
+         "Model_3/jc_patients.jl", "Model_1/run_all_m1.jl", "hack/export_*.py",
+         "scripts/plot_fit_1_vs_2.py", "scripts/plot_icp_pulsatile_1_vs_2.py",
+         "scripts/run_patient_matrix.sh"]
+[[pillars]]
+name = "plotting"
+globs = ["plotter/**", "deck_notebook.jl", "scripts/make_compliance_nb.py", "scripts/plot_fit_trace.py",
+         "scripts/plot_fit_process.py", "scripts/plot_seed_verification.jl",
+         "scripts/plot_volume_slaving.jl", "scripts/tag_output_pngs.py", "**/replot_deck.jl",
+         "**/plot_all_decks.jl", "**/replot_all_*.sh", "modelplots/*/layout.jl", "output/*/layout.jl",
+         "hack/build_*.py"]
+[[pillars]]
+name = "modelling"
+globs = ["src/**", "Model_*/**", "Protocol.jl", "SteadyState.jl"]
+[[pillars]]
+name = "infrastructure"
+globs = ["simstore.*", "SweepSpec.jl", "env_compat.jl", "scripts/**", ".github/**", "Project.toml",
+         "Manifest.toml", ".gitignore"]
+[[pillars]]
+name = "docs"
+globs = ["**/*.md", "docs/**", ".commandline-ref/**", ".protocols/**"]
+
+# ---- path map (form §4 "Default level for a change in…") -------------------------------
+[[paths]]
+level = "critical"
+row = "Model_*/Model.jl, Elements.jl, Params.jl, VarDefs.jl, src/**"
+globs = ["**/Model.jl", "**/Elements.jl", "**/Params.jl", "**/VarDefs.jl", "src/**",
+         "**/Functions.jl"]      # Functions.jl added: same role as the other core files
+[[paths]]
+level = "critical"
+row = "Protocol.jl, SteadyState.jl, Protocol_patient.jl"
+globs = ["Protocol.jl", "SteadyState.jl", "**/Protocol_patient.jl"]
+[[paths]]
+level = "passable"
+row = "fits/**/fit/<patient>.jl (generated parameters)"
+globs = ["fits/**/fit/*.jl", "fits/**/fits/*/*/fit.jl"]
+[[paths]]
+level = "critical"
+row = "fits/**/fit.jl, Data.jl, verify_fit.jl, valve_diag.jl"
+globs = ["**/fit.jl", "**/Data.jl", "**/verify_fit.jl", "**/valve_diag.jl"]
+[[paths]]
+level = "critical"
+row = "scripts/prep_jugular_data.py"
+globs = ["scripts/prep_jugular_data.py"]
+[[paths]]
+level = "critical"
+row = "plotter/registry.jl (run ids, colours, labels)"
+globs = ["plotter/registry.jl"]
+[[paths]]
+level = "passable"
+row = "plotter/plotting.jl, panels_*.jl, plot_runs.jl"
+globs = ["plotter/plotting.jl", "plotter/panels_*.jl", "plotter/plot_runs.jl", "plotter/plotting_sweep.jl"]
+[[paths]]
+level = "passable"
+row = "modelplots/<deck>/layout.jl"
+globs = ["modelplots/*/layout.jl", "output/*/layout.jl"]
+[[paths]]
+level = "passable"
+row = "simstore, SweepSpec, run_all and replot drivers"
+globs = ["simstore.*", "SweepSpec.jl", "**/run_all*.jl", "**/replot_*", "**/plot_all_decks.jl",
+         "plotter/deck_runner.jl", "**/run_sweep_split.jl", "**/main_sweep.jl"]
+[[paths]]
+level = "critical"
+row = "README, docs/, comment-only changes"
+globs = ["**/README.md", "README.md", "docs/**", "CONTRIBUTING.md"]
+[[paths]]
+level = "critical"
+row = ".protocols/*.md"
+globs = [".protocols/*.md"]
+
+# ---- hand-synced copies (form: "two code paths silently disagree") ---------------------
+# A change to one side with no matching change to the other is copy drift. `normalize`
+# lists the substitutions that are allowed to differ.
+[[pairs]]
+a = "fits/m3/Model_5/Data.jl"
+b = "Model_1/Data.jl"
+normalize = [["fits/m3/Model_5", "Model_1"], ["Model_5", "Model_1"], ["Model 5", "Model 1"], ["M5", "M1"]]
+[[pairs]]
+a = "fits/m3/Model_5/Protocol_patient.jl"
+b = "Model_1/Protocol_patient.jl"
+normalize = [["fits/m3/Model_5", "Model_1"], ["Model_5", "Model_1"], ["Model 5", "Model 1"], ["M5", "M1"]]
+[[pairs]]
+a = "fits/m3/Model_5/Protocol_patient.jl"
+b = "fits/m3/Model_6/Protocol_patient.jl"
+normalize = []
+[[pairs]]
+a = "plotter/plotting.jl"
+b = "plotter/panels_deck.jl"
+mode = "shared-functions"      # compare the bodies of functions defined in both files
+
+# ---- downstream documents (which decks feed which report) ------------------------------
+[[documents]]
+name = "CIS report (jug-* figures)"
+decks = ["jugular_compression_m1_vs_m4"]
+[[documents]]
+name = "CIS report (bc-* figures, h-sweeps)"
+decks = ["m1_*_h_P*_sweep", "m4_*_h_P*_sweep"]
+[[documents]]
+name = "Fitting report (patient decks)"
+decks = ["jugular_compression_m5_vs_p*", "jugular_compression_m4_vs_m5_p*", "jugular_compression_m1_vs_m7_p*"]
+
+# ---- registered checks (the only commands brainchecker ever runs) ----------------------
+[[checks]]
+id = "copy-drift"
+title = "Hand-synced copies still agree"
+builtin = "copy_drift"
+cost = "instant"
+applies = ["**/Data.jl", "**/Protocol_patient.jl", "plotter/plotting.jl", "plotter/panels_deck.jl"]
+[[checks]]
+id = "claim-reuse"
+title = "Where a stated number is repeated"
+builtin = "claim_reuse"
+cost = "instant"
+applies = ["**"]
+[[checks]]
+id = "verify-fit-m5"
+title = "M5 deck reproduces the M5 fit (verify_fit.jl)"
+command = "cd {repo} && _PATIENT={patient} julia --project=. fits/m3/Model_5/verify_fit.jl"
+cost = "minutes"
+applies = ["fits/m3/Model_5/**", "Model_3_celia/Model.jl", "Model_3_celia/Params.jl", "Model_3_celia/Elements.jl"]
+[[checks]]
+id = "verify-fit-m1"
+title = "M1 deck reproduces the M1 fit (verify_fit.jl)"
+command = "cd {repo} && _PATIENT={patient} julia --project=. Model_1/verify_fit.jl"
+cost = "minutes"
+applies = ["Model_1/**", "fits/m1/fit/*.jl"]
+[[checks]]
+id = "m7-gate"
+title = "Compact M7 still matches M1's verified runs"
+command = "cd {repo} && _STAGE=gate julia --project=. fits/m1/Model_7/ude_cs.jl"
+cost = "minutes"
+applies = ["fits/m1/Model_7/**"]
+[[checks]]
+id = "m6-gate"
+title = "Compact M6 still matches M5 (gate stage)"
+command = "cd {repo} && _STAGE=gate julia --project=. fits/m3/Model_6/ude_cv.jl"
+cost = "minutes"
+applies = ["fits/m3/Model_6/**"]
+[[checks]]
+id = "ursino-plots"
+title = "Ursino Fig. 9 figures redraw from the stored CSVs"
+command = "cd {repo} && julia --project=. scripts/ursino_plots.jl"
+cost = "minutes"
+applies = ["scripts/ursino_*"]
+[[checks]]
+id = "replot-deck"
+title = "Redraw one affected deck from the store"
+command = "cd {repo} && _DECK={deck} julia --project=. {replot_driver}"
+cost = "minutes"
+applies = ["plotter/**", "output/*/layout.jl", "modelplots/*/layout.jl"]
+
+# ---- internship documents read for ownership and examination evidence ---------------
+# A passage found here is shown on the site as evidence to confirm. It never marks a
+# decision examined by itself (K28-K30: written up, yet answered "Don't know").
+[[reports]]
+name = "Fitting report"
+pdf = "~/Documents/seafile/Seafile/Sophysa_models/rapports-de-stage-thomas-2026/fitting-report/report.pdf"
+[[reports]]
+name = "CIS report"
+pdf = "~/Documents/seafile/Seafile/Sophysa_models/rapports-de-stage-thomas-2026/cis-report/report.pdf"
+[[reports]]
+name = "Performing the Analysis"
+gdoc = "1BHalWYv4y0qdYvu4LFmZuPPKdwsnhQvyWNdn7koPj64"
+[[reports]]
+name = "Repo guide"
+pdf = "~/Documents/seafile/Seafile/Sophysa_models/rapports-de-stage-thomas-2026/repo-guide/report.pdf"
+[[reports]]
+name = "Fits and solve parameters"
+pdf = "~/Documents/brainphysio_celia/hack/internship-report/fits_and_solve_parameters.pdf"

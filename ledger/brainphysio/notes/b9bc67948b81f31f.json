@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:20:46",
+ "cost_usd": 0.0359468,
+ "prompt_version": "note-v1",
+ "meaning": "DATA_AMP_BASE is the baseline ICP pulse amplitude taken as the median of per-beat :icp_amp over the pre-compression window from DATA_T0 up to 5 s before jugular compression onset. The same median defines fit.jl's stage-B target, so this one window choice sets both the plotted baseline and the number the fit is scored against.",
+ "could_move": [
+  {
+   "what": "Stage-B target value and hence the fitted parameters, since fit.jl recomputes the same median over the same window",
+   "cite": "Model_1/fit.jl:614"
+  },
+  {
+   "what": "Verification pass/fail margins that compare model amplitude to the baseline",
+   "cite": "Model_1/verify_fit.jl:236"
+  },
+  {
+   "what": "Baseline line/annotation drawn in the data panels",
+   "cite": "plotter/panels_data.jl:446"
+  },
+  {
+   "what": "Per-patient jugular-compression comparison decks built on m5 vs data",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Derived contrasts, since plateau and post amplitudes use the same beat table and window convention",
+   "cite": "fits/m3/Model_5/Data.jl:169"
+  }
+ ],
+ "expectation": "Unknown in size. The 5 s guard before onset and the median make the value robust to a few noisy beats, but if the pre-onset window is short or the recording drifts, the baseline can shift and drag the stage-B target with it. Direction cannot be inferred from the code alone.",
+ "check": {
+  "command": "julia --project fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-runs the verification for the fitted case and reprints the amplitude targets without redoing the fit, so a changed baseline shows up as a changed target and margin."
+ },
+ "confidence": "low"
+}

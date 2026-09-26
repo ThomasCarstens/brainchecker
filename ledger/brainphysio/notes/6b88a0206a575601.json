@@ -1,0 +1,37 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:23",
+ "cost_usd": 0.0404066,
+ "prompt_version": "note-v1",
+ "meaning": "The pulsatile run is drawn first so it sits underneath the mean-level run, and the comment asserts that at RUN_ALPHA = 0.85 the pulsatile envelope still reads as one band while the traces on top of it stay visible. This is a layering/legibility claim about draw order and alpha, not a change to any simulated quantity.",
+ "could_move": [
+  {
+   "what": "Any deck that overlays a pulsatile run with a mean-level run: the pulsatile band goes from covering to being covered, so which trace is readable flips.",
+   "cite": "plotter/plotting.jl:311"
+  },
+  {
+   "what": "Dual-axis pressure panels specifically, where the comment says the pulsatile envelope previously covered everything else.",
+   "cite": "plotter/plotting.jl:316"
+  },
+  {
+   "what": "The m5-vs-patient decks that pair the two runs, e.g. jugular_compression_m5_vs_p081 and the p083/p137/p150 siblings.",
+   "cite": "jugular_compression_m5_vs_p081"
+  },
+  {
+   "what": "jugular_compression_m5_vs_data, which the comment says is the same deck superseded by _m5_vs_p<patient>, so it may still render with the older order.",
+   "cite": "plotter/plotting.jl:323"
+  },
+  {
+   "what": "_m3_vs_m5, which needs an m3 export in the same jugular_compression folder, so it may not rebuild cleanly to check the claim.",
+   "cite": "plotter/plotting.jl:320"
+  }
+ ],
+ "expectation": "No change to solved values. Visual only: the pulsatile envelope moves behind the mean trace. Whether \"traces inside it stay visible\" holds at alpha 0.85 depends on the panel and cannot be judged from the code alone — on dense dual-axis panels it may still obscure. I cannot tell without looking at the rendered figures.",
+ "check": {
+  "command": "julia --project fits/m3/Model_5/replot_deck.jl jugular_compression_m5_vs_p081",
+  "why": "Replots one patient deck that pairs the pulsatile and mean-level runs, without re-fitting, so the layering and the 0.85 alpha claim can be inspected directly on the dual-axis pressure panels."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

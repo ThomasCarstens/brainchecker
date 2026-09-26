@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:20:09",
+ "cost_usd": 0.07030729999999999,
+ "prompt_version": "note-v1",
+ "meaning": "The time-shift search scores a candidate lag by sampling the drawn model at `tw .- s` with nearest-index lookup on a 0.01 s export grid, instead of interpolating. The comment asserts the sampling error stays under half a sample and justifies it by analogy to the residual panel.",
+ "could_move": [
+  {
+   "what": "Best-fit shift and its correlation score are quantised to the 0.01 s grid, putting a hard floor on any reported model-to-recording lag.",
+   "cite": "Model_1/Data.jl:277"
+  },
+  {
+   "what": "Fits run through the m1 entry point inherit the chosen shift, so waveform alignment in downstream comparisons can move if the sampling rule changes.",
+   "cite": "Model_1/fit.jl"
+  },
+  {
+   "what": "Verification re-uses the same alignment code, so an alignment error would not be independently caught there.",
+   "cite": "Model_1/verify_fit.jl"
+  },
+  {
+   "what": "Jugular compression m1-vs-patient overlays are the most shift-sensitive figures, since onset timing is the compared feature.",
+   "cite": "jugular_compression_m1_vs_p083"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: nearest-index lookup can only add timing error, bounded by half the grid step (0.005 s) if the export grid really is uniform at 0.01 s. Whether that matters depends on how sharp the fitted features are; I cannot tell from this context.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl",
+  "why": "Re-runs verification for the single m1 fit without a full re-fit, so the reported shift and residual can be checked against the claim in the comment."
+ },
+ "confidence": "low"
+}

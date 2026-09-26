@@ -1,0 +1,37 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:13:15",
+ "cost_usd": 0.07028329999999999,
+ "prompt_version": "note-v1",
+ "meaning": "E_v is the fitted elastance-like parameter for patient 081 in Model_5; this file is the stored fit output that downstream runs load as fixed values. Its value sets the pressure response to a given volume change in that patient's model.",
+ "could_move": [
+  {
+   "what": "Model_5 pressure traces against the patient recording for 081",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model comparison decks at p081, where only the m5 side moves",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Reported fit residuals for 081 if the fit is not re-run consistently",
+   "cite": "Model_1/verify_fit.jl"
+  },
+  {
+   "what": "Solver step behaviour in sweeps that reuse these values",
+   "cite": "Model_1/dtmax_sweep.jl"
+  },
+  {
+   "what": "Parameter defaults consumed at load time",
+   "cite": "Model_1/Params.jl:11"
+  }
+ ],
+ "expectation": "Direction unknown from the code alone. Higher elastance usually means larger pressure excursions for the same volume change, but I cannot tell from this context whether the value went up or down, nor the size of the effect.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl 081",
+  "why": "Re-solves and checks the single patient 081 case against its stored fit, which is far cheaper than a re-fit and shows whether this value still reproduces the recording."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

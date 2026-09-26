@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:19:46",
+ "cost_usd": 0.07921385000000002,
+ "prompt_version": "note-v1",
+ "meaning": "Sets mu2_Pa_v, the centre of the second of three components in the Pa_v pressure drive shape used by Model_3_celia. Moving it shifts where that middle component sits along its argument, so it re-places part of the driving waveform.",
+ "could_move": [
+  {
+   "what": "The Pa_v waveform itself, since mu2 sits between A2_Pa_v and sigma2_Pa_v in the same three-component block",
+   "cite": "Model_3_celia/Params.jl:76"
+  },
+  {
+   "what": "Any Model_3 solve that consumes this parameter set",
+   "cite": "Model_3/bistability_confirm_plot.jl"
+  },
+  {
+   "what": "Comparison decks placing model output against patient data",
+   "cite": "jugular_compression_m5_vs_data"
+  }
+ ],
+ "expectation": "Unknown. The static reach trace does not show how mu2_Pa_v enters the equations, so I cannot tell the sign or size of the effect, nor confirm that Model_3_celia is on the path of the listed decks.",
+ "check": {
+  "command": "julia --project Model_3/bistability_confirm_plot.jl",
+  "why": "A single listed Model_3 entry point that plots rather than re-fits, so it shows whether the waveform and the bistability picture moved, at one-case cost."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

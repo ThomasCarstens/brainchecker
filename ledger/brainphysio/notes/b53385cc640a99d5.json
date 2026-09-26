@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:19:43",
+ "cost_usd": 0.06825004999999999,
+ "prompt_version": "note-v1",
+ "meaning": "This connection puts the hydrostatic element Hs_Pa in series between the arterial pressure source Pa and the brain inlet, so cerebral inflow pressure carries a posture-dependent gravitational offset. It fixes where the arterial hydrostatic column enters the topology.",
+ "could_move": [
+  {
+   "what": "Inlet pressure seen by the brain compartment, and hence cerebral inflow, in tilted postures",
+   "cite": "Model_3_celia/Model.jl:239"
+  },
+  {
+   "what": "Postural-change results that depend on the arterial-side gravitational offset",
+   "cite": "postural_changes_m3_analysis"
+  },
+  {
+   "what": "Cross-model comparison, if m4 places its arterial hydrostatic term elsewhere",
+   "cite": "postural_changes_m3_vs_m4"
+  },
+  {
+   "what": "Baseline steady state, unless the offset is exactly zero at the reference posture",
+   "cite": "steady_state_m3_analysis"
+  },
+  {
+   "what": "Bistability basins, which sit on top of this operating point",
+   "cite": "Model_3_celia/bistability_confirm_plot.jl"
+  }
+ ],
+ "expectation": "Unknown in sign and size from the code alone. It scales with the height and tilt angle given to Hs_Pa; at zero tilt it may be near zero, but I cannot confirm that here.",
+ "check": {
+  "command": "julia --project=. Model_3_celia/replot_deck.jl steady_state_m3_analysis",
+  "why": "Re-solves and replots one deck only, so a shifted arterial inlet pressure or a broken connection shows up without a full re-fit."
+ },
+ "confidence": "low"
+}

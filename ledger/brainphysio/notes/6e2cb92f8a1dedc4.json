@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:18:22",
+ "cost_usd": 0.06166705,
+ "prompt_version": "note-v1",
+ "meaning": "This connection routes the brain compartment's external port into the spinal resistance, so craniospinal outflow passes through Rspine, Hs_spine and Cspine to the abdominal pressure node. It sets the spinal pathway as a serial branch off the brain rather than a direct coupling.",
+ "could_move": [
+  {
+   "what": "Pressure drop and compliance loading the spinal branch presents to the brain compartment",
+   "cite": "Model_1_celia/Model.jl:206"
+  },
+  {
+   "what": "Flow split between the spinal branch and the venous outflow branch",
+   "cite": "Model_1_celia/Model.jl:211"
+  },
+  {
+   "what": "Whatever the single entry point solves and plots",
+   "cite": "Model_1_celia/main.jl"
+  }
+ ],
+ "expectation": "Unknown. Direction depends on Rspine and Cspine values, which are not in this context. Because this is topology, pulse amplitude and phase at the brain node can shift by an unbounded amount.",
+ "check": {
+  "command": "julia --project=. Model_1_celia/main.jl",
+  "why": "The only entry point in the reach; solves and plots one case without a re-fit, so a broken connection or a changed waveform shows immediately."
+ },
+ "confidence": "low"
+}

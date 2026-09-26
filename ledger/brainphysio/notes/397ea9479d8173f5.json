@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:21:56",
+ "cost_usd": 0.0548742,
+ "prompt_version": "note-v1",
+ "meaning": "The spinal port is clamped to zero flow, so the element only senses spinal pressure and never withdraws or injects volume there. All filtration efflux Qfilt is routed to the cranial node instead, gated by k_couple.",
+ "could_move": [
+  {
+   "what": "Spinal pressure drives the mass-spring line but the spinal node feels no back-reaction, so Psp is set entirely by the rest of the circuit",
+   "cite": "fits/m3/Model_5/Elements.jl:918"
+  },
+  {
+   "what": "Cranial volume balance carries the whole efflux when k_couple = 1; with k_couple = 0 the element is a pure observer and Pic dynamics differ",
+   "cite": "fits/m3/Model_5/Elements.jl:915"
+  },
+  {
+   "what": "Fitted Rfilt, Cpar, bpore may absorb the missing spinal sink, so those values are conditional on this clamp",
+   "cite": "fits/m3/Model_5/Elements.jl:919"
+  },
+  {
+   "what": "Jugular-compression decks comparing m5 against m1/m4 could shift, since the craniospinal split is what they probe",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Per-patient m5-vs-data agreement depends on this routing choice",
+   "cite": "jugular_compression_m5_vs_data"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: a zero-flow spinal port removes one path for craniospinal volume exchange, so more of the compression response is likely pushed into the cranial node than in a two-port version. I cannot tell the magnitude from this context.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-runs the existing single-model m5 verification without a full re-fit, so drift from this port convention shows up cheaply."
+ },
+ "confidence": "low"
+}

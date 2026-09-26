@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:18:11",
+ "cost_usd": 0.062261250000000004,
+ "prompt_version": "note-v1",
+ "meaning": "Vessel compliance C is not algebraic: it relaxes with first-order time constant τ toward the sigmoidal target σ (Model_3/Elements.jl:27, σ set at line 31 from the flow-error x). This adds a slow state that delays and smooths every compliance change instead of applying it instantly.",
+ "could_move": [
+  {
+   "what": "Resistance R depends on V (line 32) and V is driven by the flow that C shapes (lines 25-26), so τ changes the whole pressure-volume trajectory of this element",
+   "cite": "Model_3/Elements.jl:32"
+  },
+  {
+   "what": "Bistability results: the extra state and its timescale can change which basin a run falls into, or whether a third basin appears at all",
+   "cite": "Model_3/bistability_search_third.jl"
+  },
+  {
+   "what": "Postural and jugular-compression decks built on m4, where the transient shape is the compared quantity",
+   "cite": "m4_postural_changes_h_Pext_sweep"
+  },
+  {
+   "what": "Patient-fitted decks in the fitting report, since fitted parameters absorbed whatever τ was at fit time",
+   "cite": "jugular_compression_m4_vs_m5_p081"
+  }
+ ],
+ "expectation": "Direction: slower response of C to flow changes as τ grows, so smoother and lagged transients. Size is unknown from the code alone; it depends on τ relative to the cardiac and postural timescales, and on the gain terms G and ΔC at lines 30-31.",
+ "check": {
+  "command": "julia --project=. Model_3/replot_deck.jl m4_postural_changes_h_Pext_sweep",
+  "why": "Replots one existing m4 deck without a re-fit, so the transient shape of C, V and pressure can be compared against the stored figures."
+ },
+ "confidence": "low"
+}

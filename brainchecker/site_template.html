@@ -1,0 +1,429 @@
+<title>Brainchecker decision status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfaf7;--surface:#fff;--ink:#1d1d1b;--muted:#6b6a66;--line:#e4e1da;--code-bg:#f3f1ec;--hl:#fff1b8;
+  --accent:#1b6f7a;
+  --uc:#b03a2e;--up:#d9822b;--ec:#1b6f7a;--ep:#86c0c7;--mine:#1c5cab;--human:#9cc3f0;--dk:#9a9892;--nad:#d3d0c9;
+  --on-dark:#fff;--on-light:#1d1d1b;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151514;--surface:#1e1e1c;--ink:#ecebe6;--muted:#a3a19b;--line:#353430;--code-bg:#262623;--hl:#4d4320;
+  --accent:#57b3bd;
+  --uc:#dc6a5d;--up:#e5a05a;--ec:#3f9ea9;--ep:#8cc8cf;--mine:#5f95e0;--human:#9cc4f3;--dk:#8d8b85;--nad:#57554f;
+  --on-dark:#fff;--on-light:#161615;
+}}
+:root[data-theme="dark"]{
+  --bg:#151514;--surface:#1e1e1c;--ink:#ecebe6;--muted:#a3a19b;--line:#353430;--code-bg:#262623;--hl:#4d4320;
+  --accent:#57b3bd;
+  --uc:#dc6a5d;--up:#e5a05a;--ec:#3f9ea9;--ep:#8cc8cf;--mine:#5f95e0;--human:#9cc4f3;--dk:#8d8b85;--nad:#57554f;
+  --on-dark:#fff;--on-light:#161615;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Source Sans 3",system-ui,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:26px;margin:0 0 4px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:18px;margin:28px 0 10px;font-weight:700}
+h2 .n{color:var(--muted);font-weight:400;font-size:15px;margin-left:6px}
+.meta{color:var(--muted);margin:0 0 12px}
+code,pre,.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px}
+a{color:var(--accent)}
+.chip{display:inline-block;border-radius:3px;padding:1px 7px;font-size:12.5px;font-weight:600;white-space:nowrap;line-height:1.5}
+.s-unexamined-critical{background:var(--uc);color:var(--on-dark)}
+.s-unexamined-passable{background:var(--up);color:var(--on-light)}
+.s-examined-critical{background:var(--ec);color:var(--on-dark)}
+.s-examined-passable{background:var(--ep);color:var(--on-light)}
+.s-dont-know{background:var(--dk);color:var(--on-dark)}
+.s-mine{background:var(--mine);color:var(--on-dark)}
+.s-human{background:var(--human);color:var(--on-light)}
+.s-not-a-decision{background:var(--nad);color:var(--on-light)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+@media (max-width:820px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px}
+.card h3{margin:0 0 2px;font-size:16px;text-transform:capitalize}
+.card .sub{color:var(--muted);font-size:13px;margin-bottom:8px}
+.bar{display:flex;height:14px;border-radius:3px;overflow:hidden;background:var(--line)}
+.bar span{display:block;height:100%}
+.counts{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin-top:8px;font-size:13px}
+.counts b{text-align:right;font-weight:600}
+.sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0}
+details.box{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 12px;margin-top:14px}
+details.box>summary{cursor:pointer;font-weight:600}
+.box ul{margin:8px 0 4px;padding-left:20px}
+.box li{margin:3px 0}
+.toolbar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 0;margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+@media (max-width:640px){.toolbar{position:static}}
+select,input[type=search],textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:4px 6px}
+input[type=search]{flex:1 1 180px;min-width:0}
+button{font:inherit;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:4px 10px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:disabled{opacity:.5;cursor:default}
+label.cb{display:flex;align-items:center;gap:4px;font-size:14px;color:var(--muted)}
+.dbstate{font-size:13px;color:var(--muted)}
+.pending{font-size:13px;color:var(--up);font-weight:600}
+.dec{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin:6px 0}
+.dec>summary{list-style:none;cursor:pointer;padding:8px 10px;display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:4px 10px;align-items:baseline}
+.dec>summary::-webkit-details-marker{display:none}
+.dec[open]>summary{border-bottom:1px solid var(--line)}
+.dec .id{color:var(--muted)}
+.dec .ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dec .loc{color:var(--muted);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:34ch}
+.dec .tags{grid-column:3/5;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:4px 10px}
+@media (max-width:640px){.dec>summary{grid-template-columns:auto minmax(0,1fr)}.dec .id{display:none}.dec .loc{grid-column:1/3;text-align:left;max-width:none}.dec .tags{grid-column:1/3}}
+.body{padding:10px 12px 12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px 20px}
+@media (max-width:820px){.body{grid-template-columns:minmax(0,1fr)}}
+.full{grid-column:1/-1}
+.sec h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.sec p{margin:3px 0}
+pre.ctx{background:var(--code-bg);border-radius:4px;padding:6px 0;margin:0;overflow-x:auto;line-height:1.4}
+pre.ctx span{display:block;padding:0 8px;white-space:pre}
+pre.ctx span.hit{background:var(--hl)}
+.q{border-left:3px solid var(--line);padding:2px 0 2px 8px;margin:6px 0}
+.q .src{font-size:12.5px;color:var(--muted)}
+.k{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-right:4px}
+.k-own-voice,.k-rationale,.k-check{color:var(--ec)}
+.k-limitation{color:var(--up)}
+.k-ai{color:var(--uc)}
+.k-possible{color:var(--muted)}
+.note{border:1px dashed var(--muted);border-radius:5px;padding:6px 10px}
+.note .hd{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+.note ul{margin:4px 0;padding-left:18px}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:0 7px;font-size:12.5px;margin:1px 2px 1px 0}
+.thread .c{border-top:1px solid var(--line);padding:6px 0}
+.thread .c:first-child{border-top:0}
+.thread .who{font-size:13px;color:var(--muted)}
+.thread .c .txt{white-space:pre-wrap}
+.composer{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;margin-top:8px;align-items:start}
+.composer textarea{min-height:34px;resize:vertical;width:100%}
+@media (max-width:640px){.composer{grid-template-columns:1fr}}
+.hint{font-size:12.5px;color:var(--muted);grid-column:1/-1;margin:0}
+.msg{font-size:13px;grid-column:1/-1;margin:0}
+.muted{color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:4px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted)}
+.tw{overflow-x:auto}
+.empty{color:var(--muted);padding:12px 0}
+</style>
+
+<div class="wrap">
+  <h1>Decision status · <span id="tname"></span></h1>
+  <p class="meta" id="meta"></p>
+  <div class="legend" id="legend"></div>
+  <div class="cards" id="cards"></div>
+
+  <details class="box">
+    <summary>How a status changes (the protocol, from your form)</summary>
+    <ul>
+      <li>Every line is presumed AI-written and unexamined until there is evidence otherwise. Claude's own edits count as unexamined until you mark them.</li>
+      <li><b>Examined</b> means reproduced another way, your own rationale, a second reviewer, a checked source, or a walkthrough someone else can follow. Tests passing, "it looked right", and an AI explanation do not count. Specifying a change is not examining it.</li>
+      <li><b>Critical or passable</b> comes from the path map, and a few conditions raise it: an equation, a parameter, a tolerance or clamp, what is compared, a claim in a comment, a deleted gate, a new call sequence in the plotter.</li>
+      <li>Report passages appear as evidence to confirm. They never mark a decision examined on their own: K28 to K30 are written up in reports, and you still answered "Don't know" for them.</li>
+      <li>The AI note (Opus 5, dashed box) predicts what a decision could move. It is never an examination, and a check it suggests is shown here but never run.</li>
+      <li>Only your marks change a status. Pick <b>Examined</b> and say how you checked it, or pick <b>Mine</b> or <b>Not a decision</b>. Anyone else's "examined" stays a proposal in the thread.</li>
+    </ul>
+  </details>
+
+  <div class="toolbar">
+    <select id="f-pillar" aria-label="Pillar"></select>
+    <select id="f-status" aria-label="Status"></select>
+    <select id="f-kind" aria-label="Kind"></select>
+    <select id="f-source" aria-label="Source"></select>
+    <label class="cb"><input type="checkbox" id="f-note"> with AI note</label>
+    <label class="cb"><input type="checkbox" id="f-thread"> with comments</label>
+    <input type="search" id="f-q" placeholder="Search id, file, text">
+    <button id="refresh" title="Read the comments again">Refresh comments</button>
+    <span class="dbstate" id="dbstate">Comments: connecting…</span>
+    <span class="pending" id="pending"></span>
+  </div>
+
+  <div id="list"></div>
+
+  <h2>Hand-synced copies <span class="n">copy drift after the allowed renames</span></h2>
+  <div class="tw"><table id="drift"></table></div>
+
+  <h2>Per-change records <span class="n" id="commits-n"></span></h2>
+  <div class="tw"><table id="commits"></table></div>
+</div>
+
+<script type="application/json" id="bc-data">__BRAINCHECKER_DATA__</script>
+<script>
+(function(){
+"use strict";
+const DATA = JSON.parse(document.getElementById("bc-data").textContent);
+const L = DATA.labels;
+const ORDER = ["unexamined-critical","unexamined-passable","examined-critical","examined-passable","dont-know","mine","human","not-a-decision"];
+const PILLARS = ["modelling","fitting","plotting","comparison"];
+const KINDS_UI = [["comment","Comment"],["question","Question"],["examined","Examined: how I checked it"],["mine","Mine: my decision"],["not-a-decision","Not a decision"],["reopen","Reopen"]];
+const HINT = {
+  comment:"Anything: context, a correction, a pointer.",
+  question:"A question for yourself or for Claude.",
+  examined:"Say how: reproduced another way, own rationale, second reviewer, checked source, or a walkthrough. Tests and \"looked right\" don't count.",
+  mine:"You made this decision yourself; say why if it helps later.",
+  "not-a-decision":"The rules picked up something that isn't a decision. Say why, so the rules can learn.",
+  reopen:"Undo your last mark; the status falls back to the evidence."
+};
+const byId = new Map(DATA.decisions.map(d => [d.id, d]));
+const ledgerIds = new Set();
+DATA.decisions.forEach(d => (d.comments||[]).forEach(c => ledgerIds.add(c.id)));
+
+let db = null, user = null, uid = null, owner = false, canWrite = true;
+let site = [];            // comments read from the database
+const names = {};         // id -> display name
+
+const $ = s => document.querySelector(s);
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function store(k, v){ try{ localStorage.setItem("bc."+k, v); }catch(e){} }
+function recall(k){ try{ return localStorage.getItem("bc."+k); }catch(e){ return null; } }
+function day(s){ return s ? String(s).slice(0,16).replace("T"," ") : ""; }
+
+function commentsOf(d){
+  const extra = site.filter(c => c.decision === d.id && !ledgerIds.has(c.id));
+  return (d.comments||[]).map(c => Object.assign({synced:true}, c)).concat(extra)
+    .sort((a,b) => String(a.when).localeCompare(String(b.when)));
+}
+function status(d){
+  const marks = commentsOf(d).filter(c => c.owner && ["examined","mine","reopen","not-a-decision"].includes(c.kind));
+  if (!marks.length) return {s:d.base_status, why:d.base_why};
+  const m = marks[marks.length-1], crit = d.critical ? "critical" : "passable";
+  if (m.kind === "mine") return {s:"mine", why:"marked yours: "+m.text};
+  if (m.kind === "examined") return {s:"examined-"+crit, why:"examined: "+m.text};
+  if (m.kind === "not-a-decision") return {s:"not-a-decision", why:"dismissed: "+m.text};
+  return {s:d.base_status, why:d.base_why};
+}
+function chip(s){ return '<span class="chip s-'+esc(s)+'">'+esc(L[s]||s)+'</span>'; }
+
+/* ---- header ---- */
+const M = DATA.meta;
+$("#tname").textContent = "brainphysio_celia";
+const nForm = DATA.decisions.filter(d => d.source === "form").length;
+const nChange = DATA.decisions.filter(d => String(d.source).startsWith("change:")).length;
+$("#meta").textContent = M.branch + " @ " + M.commit + " · reviewed " + day(M.generated) + " · " +
+  DATA.decisions.length + " decisions: " + nForm + " from your form, " + M.sample + " sampled per pillar (seed " + M.seed + ")" +
+  (nChange ? ", " + nChange + " from commits" : "") + " · " + M.notes.count + " AI notes";
+$("#legend").innerHTML = ORDER.map(chip).join("");
+
+function renderCards(){
+  const html = PILLARS.map(p => {
+    const ds = DATA.decisions.filter(d => d.pillar === p);
+    const c = {}; ds.forEach(d => { const s = status(d).s; c[s] = (c[s]||0)+1; });
+    const inv = (M.inventory||{})[p] || {};
+    const seg = ORDER.filter(s => c[s]).map(s => '<span class="s-'+s+'" style="width:'+(100*c[s]/ds.length)+'%" title="'+esc(L[s])+': '+c[s]+'"></span>').join("");
+    const rows = ORDER.filter(s => c[s]).map(s => '<span><span class="sw s-'+s+'"></span>'+esc(L[s])+'</span><b>'+c[s]+'</b>').join("");
+    return '<div class="card"><h3>'+p+'</h3><div class="sub">'+ds.length+' decisions · '+(inv.lines||0).toLocaleString()+' candidate lines in the tree</div><div class="bar">'+seg+'</div><div class="counts">'+rows+'</div></div>';
+  }).join("");
+  $("#cards").innerHTML = html;
+}
+
+/* ---- filters ---- */
+function opts(sel, items, key){
+  sel.innerHTML = items.map(([v,t]) => '<option value="'+esc(v)+'">'+esc(t)+'</option>').join("");
+  const r = recall(key); if (r !== null && items.some(i => i[0] === r)) sel.value = r;
+  sel.addEventListener("change", () => { store(key, sel.value); renderList(); });
+}
+opts($("#f-pillar"), [["","All pillars"]].concat(PILLARS.map(p => [p, p[0].toUpperCase()+p.slice(1)])).concat([["other","Other"]]), "pillar");
+opts($("#f-status"), [["","All statuses"],["critical-open","Critical, not examined"]].concat(ORDER.map(s => [s, L[s]])), "status");
+opts($("#f-kind"), [["","All kinds"]].concat(["equation","rule","selection","value","claim","code","new-file","outside"].map(k => [k,k])), "kind");
+opts($("#f-source"), [["","All sources"],["form","Your form (K01–K32)"],["sample","Seeded sample"],["change","Commits"]], "source");
+["f-note","f-thread"].forEach(id => { const el = $("#"+id); el.checked = recall(id) === "1"; el.addEventListener("change", () => { store(id, el.checked ? "1":"0"); renderList(); }); });
+$("#f-q").addEventListener("input", () => renderList());
+
+function visible(d){
+  const p = $("#f-pillar").value, st = $("#f-status").value, k = $("#f-kind").value, src = $("#f-source").value;
+  const q = $("#f-q").value.trim().toLowerCase();
+  const s = status(d).s;
+  if (p && (p === "other" ? PILLARS.includes(d.pillar) : d.pillar !== p)) return false;
+  if (st === "critical-open" ? !(s === "unexamined-critical" || s === "dont-know") : (st && s !== st)) return false;
+  if (k && d.kind !== k) return false;
+  if (src && (src === "change" ? !String(d.source).startsWith("change:") : d.source !== src)) return false;
+  if ($("#f-note").checked && !d.note) return false;
+  if ($("#f-thread").checked && !commentsOf(d).length) return false;
+  if (q && ![d.id, d.title, d.text, d.file, d.where_label, d.detail].join(" ").toLowerCase().includes(q)) return false;
+  return true;
+}
+
+/* ---- list ---- */
+const openIds = new Set();
+function renderList(){
+  const groups = PILLARS.concat(["other"]);
+  let html = "", shown = 0;
+  groups.forEach(g => {
+    const ds = DATA.decisions.filter(d => (g === "other" ? !PILLARS.includes(d.pillar) : d.pillar === g) && visible(d))
+      .sort((a,b) => ORDER.indexOf(status(a).s) - ORDER.indexOf(status(b).s) || String(a.id).localeCompare(String(b.id)));
+    if (!ds.length) return;
+    shown += ds.length;
+    html += '<h2>'+esc(g[0].toUpperCase()+g.slice(1))+'<span class="n">'+ds.length+'</span></h2>';
+    html += ds.map(row).join("");
+  });
+  $("#list").innerHTML = shown ? html : '<p class="empty">No decision matches these filters.</p>';
+  document.querySelectorAll("#list details.dec").forEach(el => {
+    if (openIds.has(el.dataset.id)) fill(el);
+    el.addEventListener("toggle", () => { if (el.open){ openIds.add(el.dataset.id); fill(el); } else openIds.delete(el.dataset.id); });
+  });
+  renderPending();
+}
+function row(d){
+  const st = status(d), n = commentsOf(d).length;
+  const loc = d.file ? d.file + (d.line ? ":"+d.line : "") : (d.where_label || "outside the repo");
+  const title = d.title || d.text || "";
+  const tags = [esc(d.kind), d.critical ? "critical by rule" : "passable by rule", esc(provLabel(d))];
+  if (d.note) tags.push("AI note");
+  if (n) tags.push(n + (n === 1 ? " comment" : " comments"));
+  return '<details class="dec" data-id="'+esc(d.id)+'"'+(openIds.has(d.id) ? " open" : "")+'><summary>'+chip(st.s)+
+    '<span class="id mono">'+esc(d.id)+'</span><span class="ttl">'+esc(title)+'</span><span class="loc mono" title="'+esc(loc)+'">'+esc(loc)+'</span>'+
+    '<span class="tags">'+tags.map(t => "<span>"+t+"</span>").join("")+'</span></summary><div class="body"></div></details>';
+}
+function provLabel(d){
+  const w = (d.provenance||{}).who;
+  return {ai:"Claude wrote it", "presumed-ai":"presumed AI", human:"human evidence", unknown:"author unknown"}[w] || w || "";
+}
+
+function fill(el){
+  const d = byId.get(el.dataset.id), st = status(d);
+  const b = el.querySelector(".body");
+  let h = "";
+  h += '<div class="sec full"><h4>Status</h4><p>'+chip(st.s)+' '+esc(st.why)+'</p>'+
+       (d.form && !/^your form answer/.test(st.why||"") ? '<p class="muted">Your form answer: '+esc(d.form)+'</p>' : '')+'</div>';
+  // left column
+  let left = "";
+  if (d.context){
+    left += '<div class="sec"><h4>Code</h4><pre class="ctx">'+d.context.split("\n").map(l => {
+      const m = l.match(/^\s*(\d+)/); const hit = m && d.line && +m[1] === +d.line;
+      return '<span'+(hit ? ' class="hit"' : '')+'>'+esc(l)+'</span>'; }).join("")+'</pre></div>';
+  } else if (d.outside){
+    left += '<div class="sec"><h4>Where</h4><p>'+esc(d.outside)+'</p></div>';
+  }
+  if ((d.reasons||[]).length){
+    left += '<div class="sec"><h4>Why the rules flag it</h4><p>'+d.reasons.map(esc).join("<br>")+'</p>'+(d.detail ? '<p class="muted">'+esc(d.detail)+'</p>' : '')+'</div>';
+  }
+  const pv = d.provenance || {};
+  left += '<div class="sec"><h4>Who wrote it</h4><p><b>'+esc(provLabel(d))+'</b>. '+(pv.evidence||[]).map(esc).join("; ")+'</p>'+
+    (pv.moved_by ? '<p class="muted">Blame looks through '+esc(pv.moved_by)+', which only moved the line.</p>' : '')+
+    (pv.transcript && pv.transcript.prompt ? '<div class="q"><div class="src">Your prompt before Claude wrote it · '+esc(pv.transcript.when)+'</div>'+esc(pv.transcript.prompt)+'</div>' : '')+
+    (d.examined ? '<p>Examination on record ('+esc(d.examined.by)+'): '+esc(d.examined.rationale)+'</p>' : '')+'</div>';
+  const r = d.reach || {};
+  if (r.models || r.decks_total || r.refs_total){
+    left += '<div class="sec"><h4>Reach (static, approximate)</h4>'+
+      '<p>Models: '+((r.models||[]).map(m => '<span class="pill">'+esc(m)+'</span>').join("") || "none found")+'</p>'+
+      '<p>'+(r.decks_total||0)+' decks'+(r.decks_note ? ' ('+esc(r.decks_note)+')' : '')+((r.decks||[]).length ? ': <span class="mono">'+r.decks.slice(0,6).map(esc).join(", ")+(r.decks_total > 6 ? ", …" : "")+'</span>' : '')+'</p>'+
+      ((r.documents||[]).length ? '<p>Feeds: '+r.documents.map(esc).join("; ")+'</p>' : '')+
+      (r.refs_total ? '<p>'+r.refs_total+' other references'+((r.refs||[]).length ? ': <span class="mono">'+r.refs.slice(0,5).map(esc).join(", ")+'</span>' : '')+'</p>' : '')+
+      ((r.entry_points||[]).length ? '<p>Entry points: <span class="mono">'+r.entry_points.map(esc).join(", ")+'</span></p>' : '')+'</div>';
+  }
+  // right column
+  let right = "";
+  const ev = d.evidence || [];
+  right += '<div class="sec"><h4>In the reports</h4>'+(ev.length ? ev.map(e => {
+    const k = e.kind === "possible mention" ? "possible" : e.kind;
+    return '<div class="q"><div class="src"><span class="k k-'+esc(k)+'">'+esc(e.kind)+'</span>'+esc(e.doc)+(e.at ? ' · '+esc(e.at) : '')+'</div>'+esc(e.quote)+'</div>';
+  }).join("") : '<p class="muted">No passage found.</p>')+'</div>';
+  if (d.note){
+    const n = d.note;
+    right += '<div class="sec note"><div class="hd">AI note · '+esc(n.model)+' · '+esc(day(n.when))+' · confidence '+esc(n.confidence)+' · not an examination</div>'+
+      '<p>'+esc(n.meaning)+'</p>'+
+      ((n.could_move||[]).length ? '<p><b>Could move</b></p><ul>'+n.could_move.map(c => '<li>'+esc(c.what)+' <span class="mono muted">'+esc(c.cite)+'</span></li>').join("")+'</ul>' : '')+
+      '<p><b>Expectation</b> '+esc(n.expectation)+'</p>'+
+      (n.check ? '<p><b>Suggested check</b> (shown, never run) <span class="mono">'+esc(n.check.command)+'</span><br><span class="muted">'+esc(n.check.why)+'</span>'+
+        ((n.check_missing||[]).length ? '<br><span class="k k-ai">not in the repo</span>'+n.check_missing.map(esc).join(", ") : '')+'</p>' : '')+
+      (n.dropped_uncited ? '<p class="muted">'+n.dropped_uncited+' uncited claim(s) dropped.</p>' : '')+'</div>';
+  }
+  if ((d.checks||[]).length){
+    const latest = M.checks_latest || {};
+    right += '<div class="sec"><h4>Registered checks</h4><p>'+d.checks.map(c => {
+      const lr = latest[c.id];
+      return '<span class="mono">bc check '+esc(c.id)+'</span> '+esc(c.title)+' <span class="muted">('+esc(c.cost)+(lr ? ', last '+esc(lr.status)+' '+esc(day(lr.started)) : ', not run yet')+')</span>';
+    }).join("<br>")+'</p></div>';
+  }
+  h += '<div>'+left+'</div><div>'+right+'</div>';
+  // thread
+  const cs = commentsOf(d);
+  h += '<div class="sec full"><h4>Comments</h4><div class="thread">'+(cs.length ? cs.map(c =>
+    '<div class="c"><div class="who">'+esc(who(c))+' · '+esc(c.kind)+(c.kind === "examined" && !c.owner ? " (proposed)" : "")+' · '+esc(day(c.when))+(c.synced ? "" : " · not yet in the ledger")+'</div><div class="txt">'+esc(c.text)+'</div></div>'
+  ).join("") : '<p class="muted">No comments yet.</p>')+'</div>'+
+  '<div class="composer"><select aria-label="Comment kind">'+KINDS_UI.map(([v,t]) => '<option value="'+v+'">'+esc(t)+'</option>').join("")+'</select>'+
+  '<textarea aria-label="Comment" placeholder="Write a comment"></textarea><button class="primary">Save</button>'+
+  '<p class="hint"></p><p class="msg"></p></div></div>';
+  b.innerHTML = h;
+  const sel = b.querySelector(".composer select"), ta = b.querySelector("textarea"), btn = b.querySelector(".composer button"), hint = b.querySelector(".hint"), msg = b.querySelector(".msg");
+  const setHint = () => { hint.textContent = HINT[sel.value] + ((["examined","mine","not-a-decision","reopen"].includes(sel.value) && !owner) ? " Only the owner's mark changes the status; yours is kept as a proposal." : ""); };
+  sel.addEventListener("change", setHint); setHint();
+  if (!db || !canWrite){ btn.disabled = true; msg.textContent = !db ? "Comments are read-only here: the database is not available in this view." : "You can read comments but not write them."; }
+  btn.addEventListener("click", () => save(d, sel.value, ta.value.trim(), btn, msg, el));
+}
+function who(c){
+  if (c.synced) return c.author || "Thomas";
+  if (c.author && names[c.author]) return names[c.author];
+  return c.owner ? "Owner" : "Someone";
+}
+
+async function save(d, kind, text, btn, msg, el){
+  if (!text && kind !== "reopen"){ msg.textContent = "Write something first."; return; }
+  btn.disabled = true; msg.textContent = "Saving…";
+  const id = "c-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,8);
+  const body = {decision:d.id, kind, text, author:uid, by_owner:owner, when:new Date().toISOString()};
+  try{
+    await db.collection("comments").doc(id).set(body);
+    site.push({id, decision:d.id, kind, text, author:uid, owner, when:body.when});
+    openIds.add(d.id);
+    renderCards(); renderList();
+  }catch(e){
+    btn.disabled = false;
+    const code = e && e.code;
+    if (code === "invalid_argument"){ canWrite = false; msg.textContent = "You can read comments but not write them."; }
+    else if (code === "quota_exceeded") msg.textContent = "The comment store is full. Ask Claude to sync and prune it.";
+    else msg.textContent = "Not saved (" + (code || "error") + "). Try again.";
+  }
+}
+
+function renderPending(){
+  const n = site.filter(c => !ledgerIds.has(c.id)).length;
+  $("#pending").textContent = n ? n + " comment" + (n === 1 ? "" : "s") + " not yet in the ledger: ask Claude to sync the brainchecker comments" : "";
+}
+
+async function loadComments(){
+  if (!db) return;
+  $("#dbstate").textContent = "Comments: reading…";
+  try{
+    const snap = await db.collection("comments").get();
+    site = snap.docs.filter(x => x.exists).map(x => { const v = x.data(); return {id:x.id, decision:v.decision, kind:v.kind, text:v.text, author:v.author, owner:!!v.by_owner, when:v.when}; });
+    const ids = [...new Set(site.map(c => c.author).filter(Boolean))];
+    if (user && ids.length){
+      const ps = await user.profiles(ids);
+      ids.forEach(i => { names[i] = (ps[i] && ps[i].name) || "Someone"; });
+    }
+    $("#dbstate").textContent = "Comments: " + site.length + " on the site, read " + new Date().toTimeString().slice(0,5);
+  }catch(e){
+    $("#dbstate").textContent = "Comments: could not read (" + ((e && e.code) || "error") + ")";
+  }
+  renderCards(); renderList();
+}
+$("#refresh").addEventListener("click", loadComments);
+
+/* ---- drift and commits ---- */
+$("#drift").innerHTML = '<tr><th>Pair</th><th>Differs by</th><th>First differences</th></tr>' + (DATA.copy_drift||[]).map(x =>
+  '<tr><td class="mono">'+esc(x.pair)+'</td><td>'+(x.differing_lines||0)+(x.shared_functions != null ? ' of '+x.shared_functions+' shared functions' : ' lines')+'</td><td class="mono">'+
+  esc((x.sample || x.differing_functions || []).slice(0,4).join("  ·  "))+'</td></tr>').join("");
+const C = DATA.commits || [];
+$("#commits-n").textContent = C.length ? C.length + " commits recorded by the hooks" : "none yet: the hooks record each commit from now on";
+$("#commits").innerHTML = C.length ? '<tr><th>Commit</th><th>When</th><th>Subject</th><th>Decisions</th></tr>' + C.slice().reverse().map(c =>
+  '<tr><td class="mono">'+esc(c.sha)+'</td><td>'+esc(day(c.when))+'</td><td>'+esc(c.subject)+'</td><td>'+(c.decisions||[]).length+'</td></tr>').join("") : "";
+
+renderCards(); renderList();
+
+/* ---- capabilities: render first, light up later ---- */
+(async function(){
+  if (!window.claude || !window.claude.use){ $("#dbstate").textContent = "Comments: not available outside claude.ai"; return; }
+  const [d, u] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+  user = u;
+  if (u){ owner = await u.isOwner(); uid = await u.id(); const cw = await u.can("data.write"); if (cw === false) canWrite = false; }
+  db = d;
+  if (!db){ $("#dbstate").textContent = "Comments: not available in this view"; renderList(); return; }
+  loadComments();
+})();
+})();
+</script>

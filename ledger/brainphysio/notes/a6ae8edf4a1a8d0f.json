@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:23:28",
+ "cost_usd": 0.0442664,
+ "prompt_version": "note-v1",
+ "meaning": "This line ties the outlets of Rivp, Revp and Ro_spine to the inlet of Razy at one shared node, so internal vertebral, epidural and spinal outflow merge into a single azygos path with one common pressure. Editing who joins this junction changes venous topology, not just a parameter.",
+ "could_move": [
+  {
+   "what": "Any quantity downstream of the azygos path in model m6, since the three upstream branches share this node pressure and their flows sum into Razy",
+   "cite": "fits/m3/Model_6/Model.jl:285"
+  },
+  {
+   "what": "The jugular-compression comparison, which contrasts m5 and m6 venous routing; a topology edit shifts the m6 side of that contrast",
+   "cite": "jugular_compression_m5_vs_m6"
+  },
+  {
+   "what": "The single entry point that builds and solves this model",
+   "cite": "fits/m3/Model_6/main.jl"
+  }
+ ],
+ "expectation": "Unknown. Direction and size depend on which branch is added or removed and on the resistances involved; the context gives no values.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_6/main.jl",
+  "why": "Single-model solve through the only entry point for m6; confirms the system still assembles and lets outputs be compared, cheaper than a full re-fit."
+ },
+ "confidence": "low"
+}

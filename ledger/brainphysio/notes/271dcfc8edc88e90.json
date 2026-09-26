@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:05",
+ "cost_usd": 0.05080485,
+ "prompt_version": "note-v1",
+ "meaning": "The comment fixes the ICP panel's three-layer draw order (pulsatile band, recording at 0.4 opacity, non-pulsatile mean on top) and records that an alternative — mean last at 0.5 with a halo — was tried and rejected. It is a claim about a past visual comparison, not code that runs.",
+ "could_move": [
+  {
+   "what": "Every ICP data panel inherits this layering; editing the loop order changes which curve is occluded during the compression window",
+   "cite": "plotter/panels_data.jl:160"
+  },
+  {
+   "what": "The recording scatter is drawn after the pulse runs; swapping these blocks would put the measurement over the mean and contradict the comment",
+   "cite": "plotter/panels_data.jl:164"
+  },
+  {
+   "what": "Patient-deck comparison figures reuse the same panel",
+   "cite": "jugular_compression_m5_vs_data"
+  }
+ ],
+ "expectation": "Visual only: no effect on fitted parameters or residuals. The 0.4/0.5 opacity values and the halo legibility claim cannot be verified from this context, so I cannot tell whether the stated comparison still reflects the current code.",
+ "check": {
+  "command": "julia --project=. -e 'include(\"plotter/panels_data.jl\")'",
+  "why": "Regenerates the one panel so the layering can be eyeballed against the comment, without re-fitting."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

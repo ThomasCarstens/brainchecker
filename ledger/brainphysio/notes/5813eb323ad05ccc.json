@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:12:33",
+ "cost_usd": 0.04866,
+ "prompt_version": "note-v1",
+ "meaning": "Defaults to running ~1000 cardiac cycles of pulsatile pre-simulation so each m5 run starts on its limit cycle instead of a transient. Setting `_M5_LIMIT_CYCLE=0` skips that and yields transient runs.",
+ "could_move": [
+  {
+   "what": "Pulsatile initial state of every m5 run, hence any pulse amplitude or phase read off it",
+   "cite": "fits/m3/Model_5/main.jl:206"
+  },
+  {
+   "what": "Agreement between the pulsatile route and the mean-level route that verify_fit.jl enforces",
+   "cite": "fits/m3/Model_5/verify_fit.jl:145"
+  },
+  {
+   "what": "All comparison decks, since an unseeded run is stated not to be comparable with fitted numbers",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Numbers reported in the fitting report for the patient decks",
+   "cite": "jugular_compression_m5_vs_p081"
+  }
+ ],
+ "expectation": "With the seed on (default), pulsatile output should be cycle-periodic. With it off, expect a drifting first-cycles transient. The size of the offset cannot be inferred from the code alone.",
+ "check": {
+  "command": "_M5_LIMIT_CYCLE=1 julia --project=. fits/m3/Model_5/verify_fit.jl",
+  "why": "verify_fit.jl already checks the mean-level route against the pulsatile baseline, so one verify pass exercises the seeding without a re-fit."
+ },
+ "confidence": "medium"
+}

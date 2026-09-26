@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:16:54",
+ "cost_usd": 0.0526137,
+ "prompt_version": "note-v1",
+ "meaning": "Line 298 builds an uncompiled copy of the same assembly so the pre-simplification unknown list can be read at line 299, alongside the compiled system at line 301. The topology is constructed twice, so the two builds must stay in step.",
+ "could_move": [
+  {
+   "what": "If the assembly or element list differs between the raw and compiled builds, vars_raw no longer describes the solved system, and anything keyed off it is silently wrong.",
+   "cite": "Model_1/Model.jl:299"
+  },
+  {
+   "what": "Element ordering is fixed by sorting on name and feeds both builds; a renamed element reorders unknowns and can shift state indices downstream.",
+   "cite": "Model_1/Model.jl:296"
+  },
+  {
+   "what": "Any change to equations pushed into assembly, such as the shunt connects just above, propagates to both systems and to every m1 deck.",
+   "cite": "Model_1/Model.jl:292"
+  },
+  {
+   "what": "Fits re-enter through this constructor, so a topology change alters fitted parameters, not only plots.",
+   "cite": "Model_1/fit.jl"
+  },
+  {
+   "what": "Cross-model comparison decks would move on the m1 side only, so figures could change for reasons unrelated to m4/m5.",
+   "cite": "jugular_compression_m1_vs_m4"
+  }
+ ],
+ "expectation": "Unknown. Building the raw system is extra symbolic work and adds compile time; whether any solved trajectory changes cannot be told from this context.",
+ "check": {
+  "command": "julia --project=. Model_1/verify_fit.jl",
+  "why": "Re-runs an existing fit check rather than re-fitting, so a changed unknown set or changed solution surfaces cheaply."
+ },
+ "confidence": "low"
+}

@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:15:22",
+ "cost_usd": 0.029426,
+ "prompt_version": "note-v1",
+ "meaning": "Compartments that M1 does not model are exported as `null` rather than `0.0`, so the dashboard draws no bar instead of an empty bar. This keeps \"absent compartment\" distinct from \"compartment with zero volume\" in the M1-vs-M4 comparison.",
+ "could_move": [
+  {
+   "what": "The three vertebral-plexus keys (Rivp, Revp, Razy) in the exported JSON for M1: null instead of 0.0",
+   "cite": "hack/export_volumes.py:12"
+  },
+  {
+   "what": "Total volume shown at the top of the dashboard, if the summing code treats null differently from 0.0 (skip vs error vs NaN)",
+   "cite": "hack/export_volumes.py:12"
+  },
+  {
+   "what": "Bar chart and hover readout for M1: missing bars and possibly missing tooltips where M4 has values",
+   "cite": "hack/export_volumes.py:11-15"
+  }
+ ],
+ "expectation": "No change to any solved trajectory or fitted parameter; this is an export/plot representation choice. Effect is confined to the M1 rows of hack/data/*.json and how the dashboard renders them. Whether the total and the JS consumer handle null safely cannot be told from this context.",
+ "check": {
+  "command": "python3 -c \"import json,glob;[print(f,{k:v for k,v in json.load(open(f)).items() if v is None} if isinstance(json.load(open(f)),dict) else 'inspect') for f in glob.glob('hack/data/*.json')]\"",
+  "why": "Shows which exported keys are actually null without re-running any solve or fit, so you can confirm only the three M1 plexus compartments are null and check the consumer handles them."
+ },
+ "confidence": "low"
+}

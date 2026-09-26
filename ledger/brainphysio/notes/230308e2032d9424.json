@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:15",
+ "cost_usd": 0.0348538,
+ "prompt_version": "note-v1",
+ "meaning": "Table cell text in the shared summary panel is drawn at 20 pt instead of the earlier 22 pt, because cells now carry a percentage in brackets and the wider string collided with the row label in the baseline column. It is a layout claim about string width, not a numerical result.",
+ "could_move": [
+  {
+   "what": "Font size of every data cell in this table panel, including the highlighted-window cell drawn in steelblue",
+   "cite": "plotter/panels_shared.jl:824"
+  },
+  {
+   "what": "Header/label column alignment, which is set at 11 pt against the values and assumes the label column ends where the first data column starts",
+   "cite": "plotter/panels_shared.jl:818"
+  },
+  {
+   "what": "Any deck rendering this panel, e.g. the jugular-compression comparison decks, where cell strings differ in length per patient",
+   "cite": "jugular_compression_m1_vs_p081"
+  }
+ ],
+ "expectation": "Cosmetic only if the claim holds: cells ~10% smaller, less chance of overlap with row labels. But whether 20 pt actually clears the label depends on the longest cell string produced by each deck, and I cannot tell that from this context. No effect on solver output or fitted numbers.",
+ "check": {
+  "command": "julia --project=. Model_1/replot_deck.jl jugular_compression_m1_vs_p081",
+  "why": "Replots one deck that reaches this panel without re-fitting, so you can look at whether the 20 pt cells and the 11 pt labels still clear each other."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

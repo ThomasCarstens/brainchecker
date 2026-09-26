@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:16:28",
+ "cost_usd": 0.06815294999999999,
+ "prompt_version": "note-v1",
+ "meaning": "Sets the arterial source's baseline offset P0 from params[:P0_Pa_v], with a comment claiming this value is the cardiac cycle mean rather than the diastolic floor, and citing a commented-out 89.311 against a stated params value of 65.0.",
+ "could_move": [
+  {
+   "what": "Arterial waveform mean level, and so every downstream pressure and flow in m1 solves",
+   "cite": "Model_1/Model.jl:1184"
+  },
+  {
+   "what": "Fitted parameters, if P0_Pa_v is free or other parameters absorb a mis-set baseline",
+   "cite": "Model_1/fit.jl"
+  },
+  {
+   "what": "Figures and reported numbers in the patient comparison decks",
+   "cite": "jugular_compression_m1_vs_p083"
+  },
+  {
+   "what": "Sweep deck outputs, where the arterial baseline sets the operating point",
+   "cite": "m1_jugular_compression_h_Pext_sweep"
+  }
+ ],
+ "expectation": "Unknown in size. The comment disagrees with the number it cites: 89.311 reads as a cycle mean, 65.0 reads as a diastolic floor. If the live value is 65.0 while the model expects a mean, the arterial baseline is low by roughly 20 mmHg, which is not small. I cannot tell from this context which reading is correct.",
+ "check": {
+  "command": "grep -rn \"P0_Pa_v\" Model_1/",
+  "why": "Shows the actual value assigned to P0_Pa_v and every place it is set or overridden, so the human can see whether the live number is a cycle mean or a diastolic floor without re-fitting."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

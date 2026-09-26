@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:16:51",
+ "cost_usd": 0.051082050000000004,
+ "prompt_version": "note-v1",
+ "meaning": "Protocol_patient.jl aborts at load time if the prepared jugular recordings have no events.jl, and again if the selected patient (default \"081\" via _PATIENT) is not a key in JC_EVENTS. Every run of this protocol therefore requires the Python preprocessing step to have run first.",
+ "could_move": [
+  {
+   "what": "Any deck built through this protocol cannot be regenerated without the prepared data, e.g. the per-patient comparison deck.",
+   "cite": "jugular_compression_m1_vs_p081"
+  },
+  {
+   "what": "The default patient \"081\" silently selects which recording is used when _PATIENT is unset, so results may be patient-081-specific.",
+   "cite": "Model_1/Protocol_patient.jl:46"
+  },
+  {
+   "what": "The batch entry point inherits both errors; a missing or renamed patient key aborts the whole run rather than skipping that patient.",
+   "cite": "Model_1/run_jc_patients.jl"
+  }
+ ],
+ "expectation": "If the prepared data exists, no effect on numbers; if not, the protocol fails to load instead of running. Whether the default patient choice biases reported fits is unknown from this context.",
+ "check": {
+  "command": "_PATIENT=081 julia --project=. Model_1/run_jc_patients.jl",
+  "why": "Exercises the single-patient path this guard controls, showing whether prepared data is present and the patient key resolves, without a full multi-patient refit."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

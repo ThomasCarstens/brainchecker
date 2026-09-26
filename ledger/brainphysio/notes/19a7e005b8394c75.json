@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:12:42",
+ "cost_usd": 0.05252755,
+ "prompt_version": "note-v1",
+ "meaning": "Cbuf = 0.0 sets the buffer compartment's compliance to zero, disabling the spinal buffering branch (Racc and Rbuf remain defined but inert). The default model therefore runs with no compliant buffer storage.",
+ "could_move": [
+  {
+   "what": "States using the buffer term stay on the no-buffer path",
+   "cite": "fits/m3/Model_6/ude_cv.jl:211"
+  },
+  {
+   "what": "Second buffer reference; a nonzero Cbuf would change this term's scaling or division",
+   "cite": "fits/m3/Model_6/ude_cv.jl:212"
+  },
+  {
+   "what": "Downstream buffer use is effectively dead code with this default",
+   "cite": "fits/m3/Model_6/ude_cv.jl:278"
+  },
+  {
+   "what": "Spinal buffering entry point runs with a disabled branch unless it overrides Cbuf",
+   "cite": "fits/m3/Model_6/spinal_buffering.jl"
+  },
+  {
+   "what": "m5-vs-m6 comparison may credit model differences that are really the disabled buffer",
+   "cite": "jugular_compression_m5_vs_m6"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: a nonzero Cbuf adds compliance, so expect damped/slower pressure transients; with 0.0 the traces are the stiff no-buffer case. I cannot tell whether the fitted parameters absorbed the missing buffer.",
+ "check": {
+  "command": "grep -rn \"Cbuf\\|Rbuf\\|Racc\" fits/m3/Model_6/",
+  "why": "Lists every use and override of Cbuf cheaply, showing whether any entry point re-enables the branch before anything is re-fit."
+ },
+ "confidence": "low"
+}

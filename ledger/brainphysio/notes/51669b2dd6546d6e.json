@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:23:54",
+ "cost_usd": 0.057358200000000005,
+ "prompt_version": "note-v1",
+ "meaning": "`defined_by = :Ptm` is the default switch for how a vessel's compliance law is parameterised — transmural pressure rather than an alternative formulation. Every vessel built with GenericVessel_Compliance that does not pass `defined_by` explicitly inherits this law and its Ptm-branch parameters.",
+ "could_move": [
+  {
+   "what": "Compliance law used by m6 vessels that omit defined_by, hence m6 pressure/volume traces",
+   "cite": "fits/m3/Model_6/Elements.jl:78"
+  },
+  {
+   "what": "Resistance-evolution branch consuming the same component (dR/dV)",
+   "cite": "fits/m3/Model_6/Elements.jl:132"
+  },
+  {
+   "what": "Model-comparison figures pairing m5 and m6, since both copies carry the same default",
+   "cite": "jugular_compression_m5_vs_m6"
+  },
+  {
+   "what": "Patient-fit deck outputs for m5, whose Elements.jl has the identical default",
+   "cite": "fits/m3/Model_5/Elements.jl:78"
+  },
+  {
+   "what": "Fitting report figures built from the patient decks",
+   "cite": "jugular_compression_m5_vs_data"
+  }
+ ],
+ "expectation": "unknown. Changing the default would alter compliance and the dR/dV coupling for any vessel relying on it, so waveforms and fitted parameters could shift. Direction and size cannot be inferred here.",
+ "check": {
+  "command": "grep -rn \"defined_by\" fits/m3/Model_6 Model_1 Model_3",
+  "why": "Shows which call sites pass defined_by explicitly and which fall back to the default, so the true blast radius is known before any solve or re-fit."
+ },
+ "confidence": "low"
+}

@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:14:12",
+ "cost_usd": 0.05026275000000001,
+ "prompt_version": "note-v1",
+ "meaning": "The objective sums two squared, tolerance-normalised residuals: a pulse ratio against 1.03 (tol 0.30) and dICP against 10.23 (tol 1.50). obj < 2 is then read as \"the target corner is reachable\", which is the switch between \"search failure, keep fitting\" and \"structural limit of model 6\".",
+ "could_move": [
+  {
+   "what": "The tolerances 0.30 and 1.50 set the pass/fail threshold, not just relative weighting. Loosening either makes obj < 2 easier and flips the conclusion toward 'keep fitting'.",
+   "cite": "fits/m3/Model_6/target_search.jl:11"
+  },
+  {
+   "what": "Targets 1.03 and 10.23 are hard-coded in the objective, so the verdict is tied to these two literals rather than to a patient target file.",
+   "cite": "fits/m3/Model_6/target_search.jl:11"
+  },
+  {
+   "what": "Only these two summary numbers are constrained over the seven parameters; anything else the m5-vs-m6 comparison leans on is free to drift.",
+   "cite": "jugular_compression_m5_vs_m6"
+  },
+  {
+   "what": "The structural claim rests on failing 'from many starts', so the number of starts and the sampling range matter as much as the objective form.",
+   "cite": "fits/m3/Model_6/target_search.jl:11"
+  }
+ ],
+ "expectation": "Unknown. The direction depends on whether any start reaches obj < 2, and the comment itself treats both outcomes as still open. I cannot tell from the context which happened.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_6/target_search.jl",
+  "why": "This is the single search script itself, cheaper than a full re-fit, and it prints the best obj so you can see directly whether obj < 2 is reached."
+ },
+ "confidence": "low"
+}

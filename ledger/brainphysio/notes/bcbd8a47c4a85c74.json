@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:27:54",
+ "cost_usd": 0.046167299999999994,
+ "prompt_version": "note-v1",
+ "meaning": "The panel requires a per-patient M4 run at that patient's own boundary conditions, and refuses the generic m4/jugular_compression run as a fallback. The comment records a past bug where the M4 column ran to t_end=160.0 (ends_early=True) while patient columns ran to 418.37 and 418.75 s, so the comparison mixed a Pext ramp with a patient creneau.",
+ "expectation": "If per-patient M4 runs are missing, the M4 column is simply absent rather than wrong; figures lose columns instead of gaining a stimulus mismatch. Size unknown from the context.",
+ "could_move": [
+  {
+   "what": "The per-patient lookup latest_run(\"m4\", experiment, cls + \"_p\" + p) returning None for some patient silently drops that M4 column, so panel content depends on which runs exist on disk.",
+   "cite": "hack/export_volumes_patients.py:375"
+  },
+  {
+   "what": "found_any is initialised per patient but the context does not show how it is used, so the no-run-found branch and any warning behaviour cannot be checked here.",
+   "cite": "hack/export_volumes_patients.py:373"
+  },
+  {
+   "what": "The quoted numbers (160.0, 418.37, 418.75) are a frozen record of an earlier bug; if the decks or stimulus durations have changed the comment may now be stale.",
+   "cite": "hack/export_volumes_patients.py:368"
+  }
+ ],
+ "check": {
+  "command": "python hack/export_volumes_patients.py 2>&1 | tail -40",
+  "why": "Re-runs only the export/plot step and shows which patients found an M4 run and which columns were dropped, without refitting."
+ },
+ "confidence": "low"
+}

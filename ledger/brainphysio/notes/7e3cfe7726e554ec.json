@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:18:56",
+ "cost_usd": 0.07209204999999999,
+ "prompt_version": "note-v1",
+ "meaning": "The header comment at Model_3/main_sweep.jl:19 states that the cerebral venous compliance sweep multiplies brain.Veins.C_v by 0, 0.8, 1, 1.2, 2. It is a documented claim about the actual scan behind the figures, including a zero-compliance case.",
+ "could_move": [
+  {
+   "what": "If the SWEEPS table in the script no longer matches this comment, figures read against the header are mislabelled in their parameter values.",
+   "cite": "Model_3/main_sweep.jl:19"
+  },
+  {
+   "what": "The scale 0 removes venous compliance entirely, which can change or break the solve rather than just shift a curve; the same 0 is listed for k, G and tau.",
+   "cite": "Model_3/main_sweep.jl:17"
+  },
+  {
+   "what": "The combined :CGk run overlays Cv with G, k and tau, so a wrong Cv scale list propagates into the combined panel set.",
+   "cite": "Model_3/main_sweep.jl:21"
+  },
+  {
+   "what": "m4-based h-sweep figure sets inherit any mismatch in how sweep multipliers are documented.",
+   "cite": "m4_postural_changes_h_Pext_sweep"
+  }
+ ],
+ "expectation": "Unknown. The SWEEPS table itself is not in this context, so I cannot tell whether the comment matches the code or by how much it is off.",
+ "check": {
+  "command": "grep -n -A40 'SWEEPS' Model_3/main_sweep.jl",
+  "why": "Prints the real sweep definitions so the 0, 0.8, 1, 1.2, 2 claim for C_v can be checked against code without any solve or re-fit."
+ },
+ "confidence": "low"
+}

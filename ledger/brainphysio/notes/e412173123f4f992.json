@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:28:12",
+ "cost_usd": 0.03367745,
+ "prompt_version": "note-v1",
+ "meaning": "The comment interprets Fig. 7 of Ursino & Lodi (1997): SAP drops from 100 to 90 mmHg over t=10-20 s and then stays at 90 for the whole run, so the later ICP fall near t=250 s is read as a model-generated plateau wave rather than a change in the input. That reading is what fixes the step input Pa_of(t) at line 311.",
+ "could_move": [
+  {
+   "what": "Pa_of(t) holds SAP at 90 mmHg for all t>20; if the paper instead restored SAP, this input and every fig7 trace would change",
+   "cite": "scripts/ursino_lodi_1997.jl:311"
+  },
+  {
+   "what": "The claim that the t≈250 s ICP fall is an intrinsic plateau wave, not input-driven — this is the qualitative conclusion the figure is used to support",
+   "cite": "scripts/ursino_lodi_1997.jl:305"
+  },
+  {
+   "what": "The six kE values swept in fig7 are compared under this single input assumption, so the stability claim across kE rests on it",
+   "cite": "scripts/ursino_lodi_1997.jl:310"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: if SAP were actually restored toward 100 mmHg after the ramp, ICP would be expected to rise again rather than fall, and the t≈250 s feature would no longer be attributable to the model. I cannot tell from the context which reading is correct; the reach trace shows no other references, so the blast radius looks local to fig7, but I cannot confirm that.",
+ "check": {
+  "command": "julia --project=. -e 'include(\"scripts/ursino_lodi_1997.jl\"); fig7()'",
+  "why": "Re-runs only the Fig. 7 case so the ICP trace near t=250 s can be eyeballed against the published figure, without a full re-fit."
+ },
+ "confidence": "low"
+}

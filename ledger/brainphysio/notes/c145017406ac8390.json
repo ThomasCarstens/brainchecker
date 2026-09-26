@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:16:44",
+ "cost_usd": 0.0729443,
+ "prompt_version": "note-v1",
+ "meaning": "Model_1's tilt angles are no longer literal numbers here; they are read from the shared Θ_STAGES/Θ_ONSETS schedule in ../Protocol.jl, so M1 and Model_3_celia use one protocol. The comment records that M1 previously had θ_dynamic_1 = 0.0 against M3's 70°, making M1's angle protocol a no-op.",
+ "could_move": [
+  {
+   "what": "M1 postural runs now see a non-zero first-stage angle, so gravity-driven pressure shifts appear where the run was effectively flat.",
+   "cite": "Model_1/Params.jl:196"
+  },
+  {
+   "what": "Postural deck output and the M1-vs-M4 comparison change if produced under the old no-op angle.",
+   "cite": "postural_changes_m1_vs_m4"
+  },
+  {
+   "what": "The h-sweep postural decks now sweep over a protocol that actually tilts.",
+   "cite": "m1_postural_changes_h_Pext_sweep"
+  },
+  {
+   "what": "Fitted parameters may shift for any fit run on postural data, since the forcing changed.",
+   "cite": "Model_1/fit.jl"
+  }
+ ],
+ "expectation": "M1 postural runs should show a real tilt response instead of a flat one. Size unknown from this context; the 70° figure is quoted in the comment, not verified here.",
+ "check": {
+  "command": "julia --project=. Model_1/replot_deck.jl postural_changes_m1_vs_m4",
+  "why": "Replots one postural deck without refitting, so you can see whether M1 now tilts and whether the stored figure still matches."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

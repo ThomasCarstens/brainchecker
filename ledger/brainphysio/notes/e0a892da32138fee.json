@@ -1,0 +1,40 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:20:31",
+ "cost_usd": 0.07209575,
+ "prompt_version": "note-v1",
+ "meaning": "The plotting deck is driven by exactly two named seeds, :m3_basinA and :m3_basinB, each settled to steady state and then run through the tilt solve. This fixes which two basins are compared side by side in every downstream panel.",
+ "could_move": [
+  {
+   "what": "Which pair of basins the tilt figures contrast; any other seed in seed_defs is silently excluded",
+   "cite": "Model_3_celia/bistability_full_plotting.jl:103"
+  },
+  {
+   "what": "Initial condition of each dynamic run, since u0_ss comes from settling that seed's mV/mC/mQ",
+   "cite": "Model_3_celia/bistability_full_plotting.jl:105"
+  },
+  {
+   "what": "Panels that use the live probe `comps` rather than the per-basin comps_dyn may mix scopes",
+   "cite": "Model_3_celia/bistability_full_plotting.jl:97"
+  },
+  {
+   "what": "Tilt/postural panels built from these two runs",
+   "cite": "postural_changes_m3_analysis"
+  },
+  {
+   "what": "Cross-model comparison deck, if it reuses these basin runs",
+   "cite": "postural_changes_m3_vs_m4"
+  },
+  {
+   "what": "Steady-state deck, which depends on the settled states",
+   "cite": "steady_state_m3_analysis"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: restricting to two seeds narrows the comparison. If the two seeds do not sit in genuinely distinct basins, the figures show two near-identical curves instead of bistability. I cannot tell from this context which it is.",
+ "check": {
+  "command": "julia --project=. Model_3_celia/bistability_full_plotting.jl 2>&1 | grep -E 'dynamic solver retcode|basin'",
+  "why": "Runs only the two settle-plus-tilt solves and prints their retcodes, so you can see whether both basins solve and stay distinct, without a re-fit."
+ },
+ "confidence": "low"
+}

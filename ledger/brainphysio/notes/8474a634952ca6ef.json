@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:26:39",
+ "cost_usd": 0.07498255,
+ "prompt_version": "note-v1",
+ "meaning": "Registers the run id :m3vpasd as model M3 with a VP shunt plus anti-siphon device, with a legend label and the shared purple colour #7B1FA2. It is a registry/value decision: it selects model, shunt variant and appearance for that run id, not the physics equations.",
+ "could_move": [
+  {
+   "what": "Legend text and curve colour for this run. All six ASD rows share #7B1FA2, so ASD variants are indistinguishable in any deck drawing more than one of them.",
+   "cite": "plotter/registry.jl:200"
+  },
+  {
+   "what": "Which shunt variant is attached when the deck solves (:vp_asd), so the curves themselves move if this symbol is wrong.",
+   "cite": "plotter/registry.jl:203"
+  },
+  {
+   "what": "Any deck built through the registry consumer path picks up this row as written.",
+   "cite": "plotter/plotting.jl:302"
+  },
+  {
+   "what": "Batch deck runs that enumerate run ids.",
+   "cite": "Model_3_celia/run_all_decks.jl:131"
+  }
+ ],
+ "expectation": "Unknown in size. If only label and colour are at stake, the effect is cosmetic but can make two ASD curves unreadable in one panel; if the :vp_asd tag or the model tag is wrong, the plotted physics changes. I cannot tell from this context which decks actually reference :m3vpasd.",
+ "check": {
+  "command": "grep -rn \"m3vpasd\\|7B1FA2\" --include=*.jl --include=*.tex .",
+  "why": "Lists every deck, script and report that uses this run id, and shows how many rows share the same colour, before spending a solve or a re-fit."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

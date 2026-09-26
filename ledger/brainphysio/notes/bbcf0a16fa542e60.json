@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:24:26",
+ "cost_usd": 0.0509912,
+ "prompt_version": "note-v1",
+ "meaning": "Params.jl:430 hard-asserts that the learned compliance law's weight file holds exactly 25 numbers, aborting the model build otherwise. It pins the NN for Veins.C_v to one fixed shape.",
+ "could_move": [
+  {
+   "what": "Any retrained weight set with a different width, supplied via _NN_FILE, fails to load, so Model_6 cannot be built or fitted at all.",
+   "cite": "fits/m3/Model_6/Params.jl:426"
+  },
+  {
+   "what": "The 25-weight shape must match how Elements.jl's Brain_1 unpacks NN_THETA at build time; a wrong packing order would change C_v without tripping this check.",
+   "cite": "fits/m3/Model_6/Params.jl:425"
+  },
+  {
+   "what": "A weight file of the right length but trained under different squash bounds would pass this check yet shift C_v.",
+   "cite": "fits/m3/Model_6/Params.jl:431"
+  },
+  {
+   "what": "Deck output, since m6 is the only model reached and it feeds one comparison deck.",
+   "cite": "jugular_compression_m5_vs_m6"
+  }
+ ],
+ "expectation": "Unknown in magnitude. When it passes, the check changes no numbers; it only gates the build. It does not catch a wrong-but-25-long weight file, so I cannot call it a sufficient safeguard.",
+ "check": {
+  "command": "_NOFIT=1 julia --project=. fits/m3/Model_6/main.jl",
+  "why": "Builds Model_6 and exercises the weight-length assert and NN unpacking without running the fit stage."
+ },
+ "confidence": "low"
+}

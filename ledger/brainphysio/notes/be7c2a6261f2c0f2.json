@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:23:59",
+ "cost_usd": 0.0559754,
+ "prompt_version": "note-v1",
+ "meaning": "Lines 126-127 set the wall flow two ways at once: it equals minus the rate of change of vessel volume, and minus compliance times the rate of change of transmural pressure. Together they pin V to Ptm through a constant compliance C, so the vessel wall obeys a linear pressure-volume law with no independent volume state.",
+ "could_move": [
+  {
+   "what": "Vessel volume V, and hence area A = V/(N_v*l_v), is tied to Ptm by constant C; any pressure-volume nonlinearity shows up as fit residual instead.",
+   "cite": "fits/m3/Model_6/Elements.jl:124"
+  },
+  {
+   "what": "Resistance evolution is driven by V and D(V), so the linear-compliance assumption propagates into R and into the pressure drop.",
+   "cite": "fits/m3/Model_6/Elements.jl:128"
+  },
+  {
+   "what": "The m5-vs-m6 comparison may partly measure this wall law rather than the intended model difference.",
+   "cite": "jugular_compression_m5_vs_m6"
+  },
+  {
+   "what": "Two equations for ext.q plus D(V) and D(R) change the DAE structure MTK simplifies, so which variables remain states can shift.",
+   "cite": "fits/m3/Model_6/Elements.jl:121"
+  }
+ ],
+ "expectation": "Unknown in size. A constant C makes the wall stiffer or softer than a nonlinear law would be, most visibly where Ptm swings largest, i.e. during jugular compression. I cannot tell from this context whether the fit absorbs that into C and R.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_6/main.jl",
+  "why": "Single-model entry point from the reach trace. One solve shows whether the two ext.q equations still simplify and integrate, and gives V and Ptm traces to inspect, without re-fitting both models in the deck."
+ },
+ "confidence": "low"
+}

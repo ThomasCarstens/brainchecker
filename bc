@@ -1,0 +1,4 @@
+#!/bin/sh
+# brainchecker launcher: ./bc <command> (see ./bc --help)
+here="$(cd "$(dirname "$0")" && pwd)"
+PYTHONPATH="$here${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m brainchecker "$@"

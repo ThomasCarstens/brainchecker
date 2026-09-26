@@ -1,0 +1,37 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:11:52",
+ "cost_usd": 0.10117159999999999,
+ "prompt_version": "note-v1",
+ "meaning": "FIT_START sets the six-parameter starting point for the log-space Nelder-Mead fit in fits/m3/Model_5/fit.jl:358. Because the search is relative to each parameter's own start, this vector fixes both where the simplex begins and the scale of its first steps.",
+ "could_move": [
+  {
+   "what": "Fitted values of all six FIT_NAMES parameters, since Nelder-Mead on a non-convex objective can land in a different local minimum from a different start",
+   "cite": "fits/m3/Model_5/fit.jl:357"
+  },
+  {
+   "what": "Penalty/clamp behaviour near bounds, especially Psinus_v whose start (7.0*MMHG) sits well above FIT_LO 0.0 — the comment says this is the one that bites",
+   "cite": "fits/m3/Model_5/fit.jl:364"
+  },
+  {
+   "what": "Any m5 patient fit deck comparing model to recording",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Per-patient m5 comparison decks",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Downstream m1-vs-m5 and m4-vs-m5 figure decks in the CIS report (jug-* figures)",
+   "cite": "jugular_compression_m4_vs_m5_p083"
+  }
+ ],
+ "expectation": "Unknown in size. Direction is not predictable from the code alone: log-space relative steps mean a changed start rescales the simplex, so fitted values may shift a little or converge to a different basin. Whether the m5 fits stay comparable to m1/m4 cannot be told without re-running.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-checks one stored m5 fit against its recording without paying for a full re-fit, so a start-point change that moved the optimum shows up as a changed score or parameter set."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

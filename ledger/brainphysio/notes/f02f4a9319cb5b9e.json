@@ -1,0 +1,21 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:36",
+ "cost_usd": 0.046440050000000004,
+ "prompt_version": "note-v1",
+ "meaning": "The comment asserts that on this deck Pabdo is constant, so M1's transmural pressure is an exact affine function of Pds (corr = +1.00000), while M3's trace opens into a loop about 59% of the curve height versus about 2% against its own Ptm. These are stated findings baked into prose, not values the plot computes.",
+ "could_move": [
+  {
+   "what": "The keep mask that this comment says excludes the initial condition sets which samples enter the loop-height measure",
+   "cite": "plotter/plotting.jl:1892"
+  }
+ ],
+ "expectation": "Unknown. On a constant-Pabdo jugular-compression deck the correlation should be at or very near +1; on the Pabdo ramp and sweep decks it should fall below that, and the 59%/2% figures have no reason to hold. I cannot tell the size from the context.",
+ "check": {
+  "command": "julia --project Model_1/replot_deck.jl m1_pabdo_ramp_h_Pabdo_sweep",
+  "why": "Replots one deck where Pabdo is swept rather than constant, without re-fitting, so you can see whether the M1 trace is still single-valued against Pds as the comment claims."
+ },
+ "confidence": "low",
+ "dropped_uncited": 3
+}

@@ -1,0 +1,10 @@
+__pycache__/
+# rebuilt on demand: transcript index, extracted report text, lock
+ledger/*/cache/
+ledger/*/.lock
+ledger/*/staged.md
+ledger/*/background.log
+site/*.local.html
+site/index.html
+site/preview/
+ledger/*/*.log

@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:01",
+ "cost_usd": 0.036797,
+ "prompt_version": "note-v1",
+ "meaning": "DIP_TIME fixes the \"dip\" marker on every P-V panel at a default of 352 s, a time taken from the postural tilt transient, unless `_DIP_T` overrides it. The marker is purely an annotation: if 352 s falls outside a deck's drawn window the dot is skipped, not clamped.",
+ "could_move": [
+  {
+   "what": "Any P-V panel in the jugular-compression decks, whose protocol is not postural, can get a dot at 352 s that sits on the curve but marks nothing physiological — the number is justified only for tilt decks.",
+   "cite": "plotter/panels_deck.jl:711"
+  },
+  {
+   "what": "Figures in the CIS report (jug-* figures) inherit whatever _DIP_T was set in the environment at render time; a shell without the variable silently re-uses 352 s.",
+   "cite": "plotter/panels_deck.jl:706"
+  },
+  {
+   "what": "The comment states TILT_XL finds tilt onset at ~346 s and the dip lands just after. If the tilt protocol timing changes in a deck, 352 s no longer tracks it and the comment becomes a stale claim.",
+   "cite": "plotter/panels_deck.jl:707"
+  }
+ ],
+ "expectation": "Annotation only — no effect on solved states or fitted parameters. Effect is on figure reading: a possibly misplaced or absent marker. Whether 352 s is still the right instant for any given deck I cannot tell from this context.",
+ "check": {
+  "command": "_DIP_T= julia --project plotter/panels_deck.jl 2>&1 | tail -20",
+  "why": "Re-renders the panels with the dip marker disabled. Comparing against the default render shows exactly which decks carry a 352 s dot and whether it lands anywhere meaningful, without re-fitting. Adjust the entry script if panels_deck.jl is not directly runnable."
+ },
+ "confidence": "medium"
+}

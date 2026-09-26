@@ -1,0 +1,25 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:16:58",
+ "cost_usd": 0.03296955,
+ "prompt_version": "note-v1",
+ "meaning": "The comment documents the default solver time-step cap ladder for the dtmax sweep script (free, 0.5, 0.1, 0.05, 0.01 s), which is the list of caps solved when _DTMAX_VALUES is unset. It is a claim about the script's defaults, not about physiology.",
+ "could_move": [
+  {
+   "what": "The per-cap outputs and manifest.csv diagnostics written under sweep_dtmax/<stamp>/ — which dtmax_<value>.h5 files exist at all depends on this default list",
+   "cite": "Model_1/dtmax_sweep.jl:41"
+  },
+  {
+   "what": "The pulsatile twin solves, since one is run per swept cap value",
+   "cite": "Model_1/dtmax_sweep.jl:38"
+  }
+ ],
+ "expectation": "Unknown from this context. The comment itself changes nothing when solved; the risk is that it disagrees with the actual default in the code, so a reader assumes caps that were never solved. Whether the ladder reaches a converged step is not visible here.",
+ "check": {
+  "command": "_DTMAX_CASES=$(julia --project=. -e 'print(\"\")') ; grep -n \"_DTMAX_VALUES\\|0.01\\|free\" Model_1/dtmax_sweep.jl",
+  "why": "Reads the actual default cap list out of the script and compares it to the number stated in the comment, with no solve."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:21:10",
+ "cost_usd": 0.0554081,
+ "prompt_version": "note-v1",
+ "meaning": "DATA_AMP_POST summarises the recording's post-release ICP pulse amplitude as the median over a window starting 10 s after jugular compression ends and running to the end of the record. The 10 s offset discards the release transient, so the number describes recovered amplitude, not recovery dynamics.",
+ "could_move": [
+  {
+   "what": "The post-release amplitude target used in the m5 fit and its verification",
+   "cite": "fits/m3/Model_5/Data.jl:170"
+  },
+  {
+   "what": "The constant is also referenced in the m1 data module, so m1 fits and checks see any change too",
+   "cite": "Model_1/Data.jl:182"
+  },
+  {
+   "what": "Reported amplitude comparison against the recording",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Patient-specific amplitude panels",
+   "cite": "jugular_compression_m5_vs_p081"
+  },
+  {
+   "what": "Model-to-model amplitude comparison scored against the same target",
+   "cite": "jugular_compression_m5_vs_m6"
+  }
+ ],
+ "expectation": "Unknown in size. Direction depends on how fast amplitude recovers after release: if recovery is slower than 10 s, the window includes still-elevated beats and DATA_AMP_POST sits above the recovered level, so a longer offset would lower it. If no valid beats fall in the window the value is NaN and that propagates into whatever consumes it.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_5/verify_fit.jl",
+  "why": "Re-checks the existing m5 fit against the data-derived amplitude targets without re-fitting, so a shifted or NaN DATA_AMP_POST shows up in the reported residuals."
+ },
+ "confidence": "low"
+}

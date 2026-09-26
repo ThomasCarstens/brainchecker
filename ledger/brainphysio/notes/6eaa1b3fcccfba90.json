@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:22:40",
+ "cost_usd": 0.06324245,
+ "prompt_version": "note-v1",
+ "meaning": "The cheatsheet prescribes how a parameter scan is run and read: a multiplicative grid over Ca_v, skipping failed points, and an amplitude statistic defined as per-cycle peak-to-trough with the median across cycles, measured only on the last 20 s. These are modelling choices about what \"the\" pulse amplitude means, not just coding tips.",
+ "could_move": [
+  {
+   "what": "Any m5 amplitude comparison against a recording, since the median-across-cycles peak-to-trough definition sets the number being matched",
+   "cite": "fits/m3/Model_5/fit_cheatsheet.md:401"
+  },
+  {
+   "what": "Reported best-fit Ca_v, because the multiplicative decade grid fixes which candidate points exist at all",
+   "cite": "fits/m3/Model_5/fit_cheatsheet.md:398"
+  },
+  {
+   "what": "Model-vs-data comparison deck, where model and data amplitude must use the same statistic",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Model-vs-model decks, if the 20 s window truncates differently between models",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Silently skipped grid points narrowing the curve that argmin then searches",
+   "cite": "fits/m3/Model_5/fit_cheatsheet.md:399"
+  }
+ ],
+ "expectation": "Unknown. The reach trace found no code references to this cheatsheet, so I cannot tell from the context whether the fitting code follows these rules, nor how far fitted Ca_v would move if the window or statistic changed.",
+ "check": {
+  "command": "grep -rn \"last 20\\|median\\|peak\\|sortperm\\|Ca_v\" fits/m3/Model_5/ targets/",
+  "why": "Shows whether the 20 s window, the median statistic and the Ca_v grid described here actually appear in the fitting code and target definitions, or whether the cheatsheet has drifted from them. Cheap text search, no solve."
+ },
+ "confidence": "low"
+}

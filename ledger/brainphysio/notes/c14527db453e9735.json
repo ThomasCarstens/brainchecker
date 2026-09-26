@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:24:44",
+ "cost_usd": 0.05188714999999999,
+ "prompt_version": "note-v1",
+ "meaning": "The hardcoded patient list 081 083 137 150 fixes which four recordings are refit and streamed, with 16 windows and 45 iterations each by default. Any aggregate built from modelplots/ude_cv_m6/api is therefore a comparison over exactly this cohort and this fit budget.",
+ "could_move": [
+  {
+   "what": "The m6 cross-validation cohort is fixed to four IDs; adding or dropping a patient changes which cases any aggregate metric averages over.",
+   "cite": "fits/m3/Model_6/stream_all.sh:10"
+  },
+  {
+   "what": "NWIN and ITERS defaults (16 windows, 45 iterations) set the per-window fit budget, so fit quality and the resulting comparison can shift if the script is called with other arguments.",
+   "cite": "fits/m3/Model_6/stream_all.sh:8"
+  },
+  {
+   "what": "Outputs land in one shared directory keyed only by patient, so a rerun with different settings overwrites logs a comparison may have been read from.",
+   "cite": "fits/m3/Model_6/stream_all.sh:9"
+  },
+  {
+   "what": "The deck reaching this model compares m5 against m6; if the two sides are not run on the same patient list, that comparison is not like-for-like.",
+   "cite": "jugular_compression_m5_vs_m6"
+  }
+ ],
+ "expectation": "Unknown. I cannot tell from this context how sensitive the m5-vs-m6 comparison is to cohort membership or to the iteration budget.",
+ "check": {
+  "command": "_PATIENT=081 _NWIN=1 _WIN_ITERS=5 julia --project=. fits/m3/Model_6/stream_refit.jl",
+  "why": "Runs one patient for one short window to confirm the per-patient entry point and see what it writes, without the ~65 min full stream."
+ },
+ "confidence": "low"
+}

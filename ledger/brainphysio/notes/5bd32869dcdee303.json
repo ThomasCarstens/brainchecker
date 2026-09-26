@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:14:32",
+ "cost_usd": 0.0559997,
+ "prompt_version": "note-v1",
+ "meaning": "`pv_panel` defaults to `baseline=false`, so pressure-volume panels plot absolute compartment volume; only callers passing `baseline=true` re-zero y at the window's first sample. That re-zeroing exists for the combined panel, where two different compartments' absolute levels are not comparable but their excursions are.",
+ "could_move": [
+  {
+   "what": "A panel that overlays two compartments without baseline=true keeps one trace near 98 mL and the other near 20 mL, so the shared y axis flattens the smaller excursion",
+   "cite": "plotter/plotting.jl:1684"
+  },
+  {
+   "what": "Two-model comparison decks are the likely place this bites, since they draw paired traces",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Replot entry points regenerate every panel through this default, so the effect is deck-wide",
+   "cite": "Model_1/replot_deck.jl"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: baseline=false preserves absolute volume offsets; baseline=true shows excursions only. Which panels currently pass the flag cannot be told from this context.",
+ "check": {
+  "command": "julia --project Model_1/replot_deck.jl jugular_compression_m1_vs_m5_p081",
+  "why": "Replots one two-model deck without re-fitting, so the PV panel y axis and its baseline convention can be inspected directly."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

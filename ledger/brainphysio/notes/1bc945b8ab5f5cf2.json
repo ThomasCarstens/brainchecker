@@ -1,0 +1,21 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:15:06",
+ "cost_usd": 0.0608471,
+ "prompt_version": "note-v1",
+ "meaning": "In TALK mode the legend rewrites any whole \"M<digit>\" token (M2..M9) to \"M2\", so a figure reads as \"baseline vs comparison\" instead of naming the numbered model. The comment claims this is safe because every deck is M1-vs-one-other.",
+ "could_move": [
+  {
+   "what": "The rewrite happens at plot time in the shared plotting path, so any TALK-mode replot picks it up without a re-fit.",
+   "cite": "plotter/plot_runs.jl:403"
+  }
+ ],
+ "expectation": "Legend text only; no change to trajectories or fitted parameters. For M1-vs-one-other decks the effect is the intended single rename. For the m4_vs_m5 decks the expected effect is a wrong figure: two distinct curves labelled the same. I cannot tell from this context whether those decks are ever replotted in TALK mode.",
+ "check": {
+  "command": "julia Model_3/replot_deck.jl jugular_compression_m4_vs_m5_p081",
+  "why": "Replots one already-solved deck with no re-fit, and it is the deck where the comment's M1-vs-one-other assumption fails; inspect the legend for two \"M2\" entries."
+ },
+ "confidence": "medium",
+ "dropped_uncited": 3
+}

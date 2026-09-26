@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:14:48",
+ "cost_usd": 0.051819550000000006,
+ "prompt_version": "note-v1",
+ "meaning": "Before plotting, the model trace is slid in time to best correlate with the measured ABP, capped at half a beat and rejected below r=0.3. Visual agreement in the decks therefore reflects phase-aligned traces, not raw model timing.",
+ "could_move": [
+  {
+   "what": "Apparent phase agreement between model and data in the overlay; a shift up to half a beat is absorbed silently",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Model-vs-model and model-vs-patient comparisons, where each trace may be shifted differently, changing perceived lead/lag",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "Channels with weak or missing ABP return (0.0, NaN) and stay unshifted, so some panels are aligned and others are not",
+   "cite": "fits/m3/Model_5/Data.jl:215"
+  },
+  {
+   "what": "Figures depend on min_r=0.3 and max_samples=4000; changing either can change the chosen shift",
+   "cite": "fits/m3/Model_5/Data.jl:214"
+  }
+ ],
+ "expectation": "Direction unknown. Magnitude bounded by half a cardiac cycle per trace, and zero when ABP is unusable or correlation stays under 0.3. Whether fitted parameters or residuals are affected cannot be told from this context.",
+ "check": {
+  "command": "julia --project=. fits/m3/Model_5/replot_deck.jl jugular_compression_m5_vs_data",
+  "why": "Replots one deck without re-fitting, so the applied shift and any unshifted (NaN) channels can be inspected directly."
+ },
+ "confidence": "low"
+}

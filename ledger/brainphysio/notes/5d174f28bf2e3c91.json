@@ -1,0 +1,40 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:18:34",
+ "cost_usd": 0.053945,
+ "prompt_version": "note-v1",
+ "meaning": "This connection routes the brain compartment's external/CSF port into the spinal resistance path, so flow leaving the cranium passes Rspine and the spinal hydrostatic column before reaching the IVP and spinal outflow nodes. It fixes the craniospinal topology: cranial and spinal storage are coupled in series through Rspine rather than directly.",
+ "could_move": [
+  {
+   "what": "Craniospinal pressure transfer and ICP amplitude in every m4 run, since the cranial-to-spinal path is in series here",
+   "cite": "Model_3/Model.jl:528"
+  },
+  {
+   "what": "Hydrostatic/postural response, because the spinal column element sits immediately downstream of this port",
+   "cite": "Model_3/Model.jl:529"
+  },
+  {
+   "what": "IVP and spinal outflow loading, fed from the same node",
+   "cite": "Model_3/Model.jl:530"
+  },
+  {
+   "what": "Sweeps over spinal conductance may shift or lose their operating point",
+   "cite": "m4_postural_changes_ko_spine_sweep"
+  },
+  {
+   "what": "Bistability basins, which depend on this loop's topology",
+   "cite": "Model_3/bistability_test.jl"
+  },
+  {
+   "what": "Patient fits and reported figures using m4 decks",
+   "cite": "jugular_compression_m4_vs_m5_p081"
+  }
+ ],
+ "expectation": "unknown. Direction and size cannot be inferred from this context; element parameters and the alternative topology are not shown.",
+ "check": {
+  "command": "julia --project=. Model_3/replot_deck.jl steady_state_m4_analysis",
+  "why": "Re-solves and replots one m4 steady-state deck, which is cheaper than a fit and will show any shift in the craniospinal pressures this connection sets."
+ },
+ "confidence": "low"
+}

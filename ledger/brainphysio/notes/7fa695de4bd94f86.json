@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:15:06",
+ "cost_usd": 0.04628405,
+ "prompt_version": "note-v1",
+ "meaning": "The `modelplots/` directory is excluded from version control, so plots written there are never committed. Plot output is treated as regenerable build artifact rather than authored source.",
+ "could_move": [
+  {
+   "what": "Figures written into modelplots/ stay untracked, so a plot used in a write-up cannot be traced back to a commit; only the generating code is versioned.",
+   "cite": ".gitignore:105"
+  },
+  {
+   "what": "The entry sits apart from the commented GIF-artifact block below, so its intent is undocumented and a reader cannot tell whether modelplots/ is genuinely reproducible.",
+   "cite": ".gitignore:109"
+  },
+  {
+   "what": "Static reach found no references to modelplots/ at all, so I cannot tell from this context which script or notebook writes there, or whether anything reads from it.",
+   "cite": ".gitignore:105"
+  }
+ ],
+ "expectation": "No effect on model equations or fitted values. The effect is on reproducibility bookkeeping: figures must be regenerated rather than retrieved. Size of the gap is unknown because no writer of modelplots/ appears in the reach.",
+ "check": {
+  "command": "git check-ignore -v modelplots/ ; grep -rn modelplots --include=*.jl --include=*.py --include=*.ipynb .",
+  "why": "Confirms the pattern really ignores the directory and shows which code writes or reads modelplots/, which the reach trace did not find. Cheap: no solve, no re-fit."
+ },
+ "confidence": "low"
+}

@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:14:27",
+ "cost_usd": 0.09814300000000001,
+ "prompt_version": "note-v1",
+ "meaning": "FS = 100.0 hard-codes the sampling rate assumed for the jugular recordings in data/4_exemples. Every time axis, filter design and window length built in this preparation script derives from that one number.",
+ "could_move": [
+  {
+   "what": "Filter cutoffs passed to butter/filtfilt are normalised by FS, so a wrong FS shifts the effective corner frequency and changes how much of the créneau edge survives smoothing.",
+   "cite": "scripts/prep_jugular_data.py:51"
+  },
+  {
+   "what": "The pre-window baseline is counted in samples against FS, so the level the model settles to may be read off a longer or shorter stretch than intended.",
+   "cite": "scripts/prep_jugular_data.py:58"
+  },
+  {
+   "what": "Everything written to data/jugular_prepared inherits the assumed time base, so any later fit to these targets is stretched in time by the same factor.",
+   "cite": "scripts/prep_jugular_data.py:56"
+  }
+ ],
+ "expectation": "Direction unknown. If the true rate differs from 100 Hz by a factor k, prepared signals are time-scaled by k and fitted time constants move roughly with k. If the files really are 100 Hz, no effect. The reach trace found no references, so I cannot see which decks consume the output.",
+ "check": {
+  "command": "python -c \"import pandas as pd,glob;f=sorted(glob.glob('data/4_exemples/*'))[0];d=pd.read_csv(f);print(f);print(d.columns.tolist());print(d.head());print(d.shape)\"",
+  "why": "Prints the first raw example's columns, first rows and length so a human can compare any timestamp spacing against the assumed 100 Hz without re-running a fit."
+ },
+ "confidence": "low"
+}

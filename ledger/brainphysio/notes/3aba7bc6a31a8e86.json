@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:28:26",
+ "cost_usd": 0.03149075,
+ "prompt_version": "note-v1",
+ "meaning": "A plotting convention: model M1 is drawn first as a thick blue backdrop (5.0 pt), model M3 second as a thin fluorescent orange line (2.0 pt) on top. It fixes which curve reads as the reference in every figure from this script.",
+ "could_move": [
+  {
+   "what": "Colour and linewidth constants for the two model traces; swapping the values would reverse which model looks like the reference",
+   "cite": "scripts/ursino_plots.jl:44"
+  },
+  {
+   "what": "LW_M1 = 5.0 vs LW_M3 = 2.0 — the thickness contrast that carries the backdrop/overlay reading",
+   "cite": "scripts/ursino_plots.jl:45"
+  },
+  {
+   "what": "The comment claims MODELS lists M1 first, so draw order follows list order; if that list is reordered, orange would be hidden under blue",
+   "cite": "scripts/ursino_plots.jl:38"
+  },
+  {
+   "what": "C_REF is a third colour not covered by the stated rule, so its role in the same figures is unclear from this context",
+   "cite": "scripts/ursino_plots.jl:46"
+  }
+ ],
+ "expectation": "Figure appearance only: no effect on fitted parameters or solver output. Whether the claim about MODELS ordering still holds cannot be checked from this context — the reach trace found no references and no models, so I cannot confirm the constants are actually consumed in the stated order.",
+ "check": {
+  "command": "julia --project=. scripts/ursino_plots.jl",
+  "why": "Re-runs only the plotting script (no re-fit) so a human can look at the output figures and confirm blue M1 is the thick backdrop and orange M3 sits on top."
+ },
+ "confidence": "low"
+}

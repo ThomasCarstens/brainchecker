@@ -1,0 +1,32 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:12:35",
+ "cost_usd": 0.03492055,
+ "prompt_version": "note-v1",
+ "meaning": "The Ursino-Lodi autoregulation sigmoid inputs are clamped to ±40 before exponentiation, so the sigmoid saturates instead of overflowing when flow deviates far from nominal. This bounds both the compliance-range switch dC and the sigmoid argument G*x/(dC/4).",
+ "could_move": [
+  {
+   "what": "Autoregulated arterial compliance C_a and its rate dCa_dt saturate at the clamp edge, so fitted P.G and P.tau can shift",
+   "cite": "fits/m1/Model_7/ude_cs.jl:333"
+  },
+  {
+   "what": "dC switch is frozen at dCn or dCp once |10x| > 40, i.e. beyond ~0.4% flow deviation, which is very tight and may be doing more than overflow protection",
+   "cite": "fits/m1/Model_7/ude_cs.jl:332"
+  },
+  {
+   "what": "Intracranial pressure dPic depends on C_a and dCa_dt, so clamped autoregulation changes the ICP trace",
+   "cite": "fits/m1/Model_7/ude_cs.jl:338"
+  },
+  {
+   "what": "Jugular compression decks drive large flow deviations, exactly the regime where the clamp binds",
+   "cite": "jugular_compression_m1_vs_m7_p081"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: during compression the autoregulation response is capped rather than growing, so C_a excursions and the ICP response are likely smaller than an unclamped model would give. The 10x clamp at ±40 binds at much smaller flow deviations than the ±40 on the G term, so it is the more suspicious of the two.",
+ "check": {
+  "command": "julia --project fits/m1/Model_7/ude_cs.jl --deck jugular_compression_m1_vs_m7_p081 --replot",
+  "why": "Solve and replot one jugular compression case, the regime where the clamp is most likely active, and inspect the C_a and Pic traces for flat saturated segments."
+ },
+ "confidence": "low"
+}

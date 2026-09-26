@@ -1,0 +1,36 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:23:00",
+ "cost_usd": 0.05891879999999999,
+ "prompt_version": "note-v1",
+ "meaning": "The README states that epidural venous compliance defaults to 1.5 mL/mmHg with a search box of 0.4–3.5, and that azygos venous compliance is re-derived to 0.4 with bounds 0.15–1.2, both marked \"Applied\". It records a narrowed, literature-anchored prior for two venous compliances in the Model_5 fit.",
+ "could_move": [
+  {
+   "what": "Any m5 fit that previously explored C_azy_v near 2.5 is now excluded by the 0.15–1.2 box, so fitted venous pressures and the jugular-compression response can shift.",
+   "cite": "fits/m3/Model_5/fits/README.md:110"
+  },
+  {
+   "what": "The narrower C_evp_v box (0.4–3.5 instead of a decade either side) can move the optimum or leave the fit sitting at a bound.",
+   "cite": "fits/m3/Model_5/fits/README.md:106"
+  },
+  {
+   "what": "m5-vs-data and m5-vs-m6 comparison decks redraw against the new parameters.",
+   "cite": "jugular_compression_m5_vs_data"
+  },
+  {
+   "what": "Cross-model decks that hold m1/m4 fixed now compare against a differently-bounded m5.",
+   "cite": "jugular_compression_m1_vs_m5_p081"
+  },
+  {
+   "what": "The claimed provenance source must match the audit document, which the README says supersedes the EXTRA_SPEC reasoning.",
+   "cite": "fits/m3/Model_5/fits/README.md:102"
+  }
+ ],
+ "expectation": "Unknown. Direction depends on whether earlier fits sat inside or outside the new boxes; if C_azy_v was near 2.5 the change is large, otherwise small. This is prose, so I cannot tell from this context whether the code matches the stated numbers.",
+ "check": {
+  "command": "grep -rn \"C_azy_v\\|C_evp_v\" fits/m3/Model_5",
+  "why": "Confirms the code actually carries the 0.4 / 0.15–1.2 and 1.5 / 0.4–3.5 values the README claims are Applied, before trusting any fit output."
+ },
+ "confidence": "low"
+}

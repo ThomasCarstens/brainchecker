@@ -1,0 +1,33 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:26:27",
+ "cost_usd": 0.07107005,
+ "prompt_version": "note-v1",
+ "meaning": "VARIANTS fixes the set of pulsatility conditions the notebook builds and pairs up, so every deck is rendered and compared under exactly \"pulsatile\" and \"nonpulsatile\". A run whose pulsatility label is not one of these two names is not selected for plotting or comparison.",
+ "could_move": [
+  {
+   "what": "Which variant curves appear in each comparison deck figure, e.g. jugular_compression_m1_vs_m4 and postural_changes_m3_vs_m4",
+   "cite": "scripts/make_compliance_nb.py:75"
+  },
+  {
+   "what": "The other consumer of VARIANTS later in the same script may loop over a different variant count than the decks actually produced",
+   "cite": "scripts/make_compliance_nb.py:1096"
+  },
+  {
+   "what": "Patient decks jugular_compression_m4_vs_m5_p081/p083/p137 are named with a trailing _p0NN, which COMPARISON's _m\\d+_vs_[a-z0-9]+$ does not appear to match; whether they are selected as comparisons at all is unclear from this context",
+   "cite": "scripts/make_compliance_nb.py:81"
+  },
+  {
+   "what": "The Julia entry point drives these deck runs, so a variant name mismatch surfaces as missing panels rather than an error",
+   "cite": "Model_3/run_jc_patients.jl:104"
+  }
+ ],
+ "expectation": "Unknown in size. Direction: a variant present in run output but absent from this tuple is dropped from figures and from comparison metrics; the h-sweep decks (m4_*_h_Pabdo_sweep etc.) may carry no pulsatility axis, in which case one of the two variants is empty.",
+ "check": {
+  "command": "grep -rn \"pulsatile\" scripts/make_compliance_nb.py Model_3/run_jc_patients.jl",
+  "why": "Shows every place the two variant names are produced and consumed, so a name that exists in the run but not in VARIANTS (or the reverse) is visible without re-fitting."
+ },
+ "confidence": "low",
+ "dropped_uncited": 1
+}

@@ -1,0 +1,24 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:17:50",
+ "cost_usd": 0.04461785,
+ "prompt_version": "note-v1",
+ "meaning": "Sets the default geometry of this element: length l = 10.0 and density ρ = 1.0 in the component's own units, used when a caller does not pass them. Together they scale the ρ·l-type inertial coefficient this element contributes.",
+ "could_move": [
+  {
+   "what": "Any pressure or flow solved through this component when it is instantiated without explicit l or ρ — amplitude and phase depend on the ρ·l inertance scale.",
+   "cite": "Model_1_celia/Elements.jl:592"
+  },
+  {
+   "what": "The single entry point that builds and solves the model; the only place this default can surface.",
+   "cite": "Model_1_celia/main.jl"
+  }
+ ],
+ "expectation": "Unknown in size. Directionally, larger l or ρ raises the inertial coefficient and slows the transient. The static trace found no references, so the default may never be exercised; I cannot tell from this context whether it is live.",
+ "check": {
+  "command": "julia --project=. Model_1_celia/main.jl",
+  "why": "One solve of the only entry point that reaches this element, far cheaper than a re-fit; outputs can be compared before and after perturbing l."
+ },
+ "confidence": "low"
+}

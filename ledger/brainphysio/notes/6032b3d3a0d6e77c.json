@@ -1,0 +1,29 @@
+{
+ "status": "ok",
+ "model": "claude-opus-5",
+ "when": "2026-09-26T19:25:00",
+ "cost_usd": 0.036747100000000005,
+ "prompt_version": "note-v1",
+ "meaning": "The comment justifies plotting the Doppler traces from a gap-preserving series (NaNs kept) so Plots breaks the line across the outage instead of interpolating across it. It backs that choice with specific numbers for patient 081's outage: 115.6 s, 27.6% of the recording, model time 23.1→138.7 s, covering the compression onset.",
+ "could_move": [
+  {
+   "what": "The quoted outage numbers are hard-coded prose, not computed at plot time. If the 081 recording, its trimming, or the data→model time offset is changed, the comment silently goes stale while the panel still renders.",
+   "cite": "plotter/panels_data.jl:498"
+  },
+  {
+   "what": "The gap-preserving series is what makes the break appear. If the Doppler columns are ever fed from a filled or resampled series instead, the same loop draws a straight line through the onset with no visible sign.",
+   "cite": "plotter/panels_data.jl:504"
+  },
+  {
+   "what": "The claim is specific to patient 081, but the loop is shared by all patient decks. The 083, 137 and 150 comparison decks get the same treatment with no statement about their gap structure.",
+   "cite": "jugular_compression_m5_vs_p083"
+  }
+ ],
+ "expectation": "No effect on any fitted number or solve — this is a drawing choice only. It changes what the 081 Doppler panel looks like across model time 23.1→138.7 s. Whether the stated 115.6 s / 27.6% still match the current data files is unknown from this context.",
+ "check": {
+  "command": "julia --project=. bc replot jugular_compression_m5_vs_p081",
+  "why": "Re-renders the one deck the comment is about, without re-fitting. Look at the Doppler panel: the line should break over the compression onset rather than run straight through it, and the break should sit where the comment says it does."
+ },
+ "confidence": "medium",
+ "dropped_uncited": 1
+}
