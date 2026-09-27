@@ -1,15 +1,33 @@
-<img src="assets/brain.svg" alt="" width="32" align="right">
+<img src="assets/brain.svg" alt="" width="96" align="right">
 
 # brainchecker
 
-brainchecker runs per-change decision checks on a modelling repository. It works without CI/CD: everything runs on the author's machine, when a change happens, and it never blocks. The rules it enforces are in [PROTOCOL.md](PROTOCOL.md).
+brainchecker applies [PROTOCOL.md](PROTOCOL.md) to a modelling repository, one change at a time. The protocol says what counts as a decision, who owns it and what counts as examined; this README only covers running the tool.
+
+Here is `git bc stage` on a staged change (brainphysio_celia's commit 5daa9896, re-staged on its parent):
 
 ```
-git commit ─▶ pre-commit: the staged change, cut into decisions, grouped by level (prints, never blocks)
-          └▶ post-commit: decisions into the ledger; AI notes for critical ones in the background
-bc review ─▶ the whole tree: your 32 form decisions + 30 sampled per pillar, provenance, reach, reports
-bc site   ─▶ one page with every status and a comment thread per decision
+$ git bc stage
+brainchecker · staged change: 3 decisions — 2 unexamined · critical · 1 unexamined · passable
+  (this report never blocks; Claude-written lines count as unexamined until you mark them)
+
+UNEXAMINED · CRITICAL
+  plotter/plot_runs.jl:69  [claim] # One canvas for every deck, patient decks included (1200×400 since the compare_ALL pass).
+      by presumed AI · flag: a comment or docstring that states a number or a finding · reaches m1,m4; 0 decks
+  plotter/plot_runs.jl:71  [value] const LW_SCALE   = PANEL_W / 600   # = 2.0 — for BLUE_REF_LW (M1's backdrop weight) only
+      by presumed AI · flag: a comment or docstring that states a number or a finding · reaches m1,m4; 0 decks
+
+unexamined · passable
+  plotter/plot_runs.jl:70  [value] const PANEL_W    = 1200
+      by presumed AI · reaches m1,m4; 0 decks
+
+To mark one: put `# examined: <how you checked it>` or `# human: <why>` on or next to the line,
+or comment on it on the site. Notes for critical decisions are written after the commit.
 ```
+
+The pre-commit hook prints the same report on `git commit`. `./bc site` builds the status page, with every decision and a comment thread for each:
+
+![The status page: four pillar summaries, then the decisions, each with its status, id, line and file](assets/site.png)
 
 ## Commands
 
@@ -25,7 +43,7 @@ Run these from this folder, with `./bc`. In the target repo, `git bc` does the s
 | `./bc check ID` | Runs one registered check (`copy-drift`, `verify-fit-m5`, `m7-gate`, …) |
 | `./bc comment ID "text" --kind examined` | Marks or comments on a decision from the terminal |
 | `./bc sync-comments FILE` | Imports the website's comments (Claude exports them from the page's database) |
-| `./bc site` | Builds `site/index.html` from the ledger |
+| `./bc site` | Builds `site/status.html` from the ledger |
 | `./bc install` / `./bc uninstall` | Adds or removes the two hooks and the `git bc` alias in the target repo |
 
 ## Layout
@@ -40,22 +58,9 @@ site/                the generated page, status.html (ignored); the template is 
 tests/               python3 -m unittest discover tests
 ```
 
-## Where the facts come from
-
-- **Decisions** come from rules only ([rules.py](brainchecker/rules.py)). AI never decides what counts as a decision.
-- **Who wrote a line** is worked out from three sources, in order:
-  1. A `# human:` mark in the code.
-  2. The Claude Code transcripts in `~/.claude/projects/<project>/`. A line counts as Claude's when an Edit added it or a Write created the file that holds it.
-  3. `git blame`. Blame looks through commits that only moved a line. A `Co-Authored-By: Claude` trailer counts as AI, and a date on or before `pre_ai_until` counts as the pre-AI baseline.
-  
-  Anything else is **presumed AI**.
-- **Examination** comes only from an `# examined:` mark, a DECISIONS.md entry, the owner's comment on the site, or the form answer.
-- **Report evidence** comes from pdftotext of the internship reports, plus the "Performing the Analysis" Google Doc, read through its export link. It is shown as evidence to confirm and never counts as an examination.
-- **Notes** come from Claude Code (`claude-opus-5`, low effort), with a JSON schema. Every "could move" item must cite a file or deck from the reach, or it is dropped. Each note is cached by a hash of its inputs, and its cost is logged in `spend.jsonl`. The costs are API-equivalent: on a claude.ai plan the calls draw on the plan's allowance. If a run hits the usage limit, the batch stops cleanly.
-
 ## Cost control
 
-Everything is in `[notes]` in `targets/<name>/target.toml`:
+Notes are written by Claude Code, and each one's cost is logged in `spend.jsonl`. The costs are API-equivalent: on a claude.ai plan the calls draw on the plan's allowance, and a run that hits the usage limit stops cleanly. The settings are in `[notes]` in `targets/<name>/target.toml`:
 
 | Setting | What it controls |
 |---|---|
