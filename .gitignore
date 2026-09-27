@@ -5,6 +5,6 @@ ledger/*/.lock
 ledger/*/staged.md
 ledger/*/background.log
 site/*.local.html
-site/index.html
+site/*.html
 site/preview/
 ledger/*/*.log

@@ -67,6 +67,6 @@ def build(target, out: str | None = None) -> Path:
     }
     blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     html = TEMPLATE.read_text().replace("__BRAINCHECKER_DATA__", blob)
-    path = Path(out) if out else target.home / "site" / "index.html"
+    path = Path(out) if out else target.home / "site" / "status.html"
     path.write_text(html)
     return path

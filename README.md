@@ -34,7 +34,7 @@ targets/<name>/      target.toml (paths, path map, pairs, checks, reports), know
                      the form answers
 ledger/<name>/       decisions.json, comments.jsonl, STATUS.md, notes/, spend.jsonl, checks/   (tracked)
                      cache/ (transcript index, report text)                                    (ignored)
-site/                the generated page (ignored); the template is brainchecker/site_template.html
+site/                the generated page, status.html (ignored); the template is brainchecker/site_template.html
 tests/               python3 -m unittest discover tests
 ```
 
