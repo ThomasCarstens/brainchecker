@@ -1,3 +1,5 @@
+<img src="assets/brain.svg" alt="" width="32" align="right">
+
 # brainchecker
 
 brainchecker runs per-change decision checks on a modelling repository. It works without CI/CD: everything runs on the author's machine, when a change happens, and it never blocks. The rules it enforces are in [PROTOCOL.md](PROTOCOL.md).

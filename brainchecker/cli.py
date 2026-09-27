@@ -97,8 +97,10 @@ def _install(target):
     py = sys.executable
     for name, cmd in (("pre-commit", "pre-commit"), ("post-commit", "post-commit")):
         f = hooks / name
-        line = (f'{HOOK_MARK}\nPYTHONPATH="{target.home}" "{py}" -m brainchecker --target {target.name} '
-                f'{cmd} || true\n')
+        # Guarded: if brainchecker is moved or deleted, commits stay silent instead of
+        # printing "No module named brainchecker" every time.
+        line = (f'{HOOK_MARK}\n[ -d "{target.home / "brainchecker"}" ] && PYTHONPATH="{target.home}" "{py}" '
+                f'-m brainchecker --target {target.name} {cmd} || true\n')
         if f.exists():
             text = f.read_text()
             if HOOK_MARK in text:

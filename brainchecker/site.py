@@ -14,6 +14,17 @@ from pathlib import Path
 from . import checks, ledger
 
 TEMPLATE = Path(__file__).with_name("site_template.html")
+LOGO = Path(__file__).resolve().parents[1] / "assets" / "brain.svg"
+
+
+def _logo() -> str:
+    """brain.svg inline, sized by the page's CSS; nothing if the file is missing."""
+    try:
+        svg = LOGO.read_text()
+    except OSError:
+        return ""
+    svg = svg[svg.index("<svg"):]
+    return re.sub(r'<svg\b([^>]*?)\s+width="64"\s+height="64"', r'<svg\1 class="logo" aria-hidden="true" focusable="false"', svg, count=1)
 
 
 def _missing_paths(target, cmd: str) -> list[str]:
@@ -66,7 +77,7 @@ def build(target, out: str | None = None) -> Path:
         "commits": doc.get("commits", [])[-40:],
     }
     blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
-    html = TEMPLATE.read_text().replace("__BRAINCHECKER_DATA__", blob)
+    html = TEMPLATE.read_text().replace("__BRAIN_LOGO__", _logo()).replace("__BRAINCHECKER_DATA__", blob)
     path = Path(out) if out else target.home / "site" / "status.html"
     path.write_text(html)
     return path
